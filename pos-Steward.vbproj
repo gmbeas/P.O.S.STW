@@ -1,0 +1,1559 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{23BDB84A-D18D-4AF7-8F26-293DBA09F854}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>pos_Steward.My.MyApplication</StartupObject>
+    <RootNamespace>pos_Steward</RootNamespace>
+    <AssemblyName>Pos2</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>WindowsForms</MyType>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionStrict>Off</OptionStrict>
+    <OptionInfer>On</OptionInfer>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <ManifestCertificateThumbprint>ECCC84CA3B244AA3BA7CEC9EA61F9FE57315C4BF</ManifestCertificateThumbprint>
+    <ManifestKeyFile>pos-Steward_TemporaryKey.pfx</ManifestKeyFile>
+    <GenerateManifests>false</GenerateManifests>
+    <SignManifests>false</SignManifests>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+    <TargetZone>LocalIntranet</TargetZone>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <PublishUrl>d:\instaladorPos\</PublishUrl>
+    <Install>false</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <WebPage>publish.htm</WebPage>
+    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>Pos2.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>Pos2.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ChilkatDotNet2">
+      <HintPath>..\..\..\..\Aplicaciones\ChilKat\x86\ChilkatDotNet2-9.5.0-win32\ChilkatDotNet2-9.5.0-win32\ChilkatDotNet2.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.MSXML2, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Interop.MSXML2.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="GeneraTXT" />
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AnulaDocumento.Designer.vb">
+      <DependentUpon>AnulaDocumento.vb</DependentUpon>
+    </Compile>
+    <Compile Include="AnulaDocumento.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="BancoDialogoCheque.Designer.vb">
+      <DependentUpon>BancoDialogoCheque.vb</DependentUpon>
+    </Compile>
+    <Compile Include="BancoDialogoCheque.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CLientesCuenta.Designer.vb">
+      <DependentUpon>CLientesCuenta.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CLientesCuenta.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="clsIni.vb" />
+    <Compile Include="Code\Controller\ArticuloController.vb" />
+    <Compile Include="Code\Controller\AyudaPosController.vb" />
+    <Compile Include="Code\Controller\BancosController.vb" />
+    <Compile Include="Code\Controller\BodegasController.vb" />
+    <Compile Include="Code\Controller\CajasController.vb" />
+    <Compile Include="Code\Controller\CajerosController.vb" />
+    <Compile Include="Code\Controller\CiudadController.vb" />
+    <Compile Include="Code\Controller\ClientesController.vb" />
+    <Compile Include="Code\Controller\CuentaCorriente.vb" />
+    <Compile Include="Code\Controller\DireccionesController.vb" />
+    <Compile Include="Code\Controller\DocumentoController.vb" />
+    <Compile Include="Code\Controller\NotaCreditoController.vb" />
+    <Compile Include="Code\Controller\ParametrosController.vb" />
+    <Compile Include="Code\Controller\DocumentosPagoController.vb" />
+    <Compile Include="Code\Controller\DocumentosVentaController.vb" />
+    <Compile Include="Code\Controller\EmpresaController.vb" />
+    <Compile Include="Code\Controller\ListaPrecioController.vb" />
+    <Compile Include="Code\Controller\MonedasController.vb" />
+    <Compile Include="Code\Controller\PendientesController.vb" />
+    <Compile Include="Code\Controller\PosLog.vb" />
+    <Compile Include="Code\Controller\RegionesController.vb" />
+    <Compile Include="Code\Controller\SedeController.vb" />
+    <Compile Include="Code\Controller\SucursalClienteController.vb" />
+    <Compile Include="Code\Controller\TarjetasCreditoController.vb" />
+    <Compile Include="Code\Controller\TerminoPagoController.vb" />
+    <Compile Include="Code\Controller\UsuarioController.vb" />
+    <Compile Include="Code\Controller\VendedorController.vb" />
+    <Compile Include="Code\Controller\VentaController.vb" />
+    <Compile Include="Code\FtpClient.vb" />
+    <Compile Include="Code\Obj\ArticuloObj.vb" />
+    <Compile Include="Code\Obj\ChequeObj.vb" />
+    <Compile Include="Code\Obj\ArticuloStringObj.vb" />
+    <Compile Include="Code\Obj\ClienteObj.vb" />
+    <Compile Include="Code\Obj\ClsSesion.vb" />
+    <Compile Include="Code\Obj\ContactosClienteObj.vb" />
+    <Compile Include="Code\Obj\CuentaCorrienteObj.vb" />
+    <Compile Include="Code\Obj\DireccionesObj.vb" />
+    <Compile Include="Code\Obj\DocumentoCobranzaObj.vb" />
+    <Compile Include="Code\Obj\DocumentoObj.vb" />
+    <Compile Include="Code\Obj\DocumentosVentaObj.vb" />
+    <Compile Include="Code\Obj\DireccionObj.vb" />
+    <Compile Include="Code\Obj\FichaCobranzaObj.vb" />
+    <Compile Include="Code\Obj\Fragmentos\ComunasController.vb" />
+    <Compile Include="Code\Obj\Fragmentos\DocumentoPago_Condicion_cargo.vb" />
+    <Compile Include="Code\Obj\Fragmentos\DocumentoPago.vb" />
+    <Compile Include="Code\Obj\Fragmentos\DocumentoPagoCargo.vb" />
+    <Compile Include="Code\Obj\Fragmentos\DocumentoPago_abono.vb" />
+    <Compile Include="Code\Obj\Fragmentos\DocumentoPago_detalle_cargo.vb" />
+    <Compile Include="Code\Obj\Fragmentos\DocumentoPago_detvarios_cargo.vb" />
+    <Compile Include="Code\Obj\Fragmentos\DocumentoPago_impuesto_cargo.vb" />
+    <Compile Include="Code\Obj\Fragmentos\DocumentoPago_ppto_cargo.vb" />
+    <Compile Include="Code\Obj\Fragmentos\DocumentoPago_voucher_cargo.vb" />
+    <Compile Include="Code\Obj\ListaObj.vb" />
+    <Compile Include="Code\Obj\PerfilClienteObj.vb" />
+    <Compile Include="Code\Obj\SedeObj.vb" />
+    <Compile Include="Code\Obj\TipoVentasObj.vb" />
+    <Compile Include="Code\Obj\UsuarioObj.vb" />
+    <Compile Include="Code\Obj\VendedorObj.vb" />
+    <Compile Include="Code\Obj\VentaObj.vb" />
+    <Compile Include="Code\Servicios.vb" />
+    <Compile Include="Code\VentaXML.vb" />
+    <Compile Include="direccionFacturacion.Designer.vb">
+      <DependentUpon>direccionFacturacion.vb</DependentUpon>
+    </Compile>
+    <Compile Include="direccionFacturacion.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAutorizacion.Designer.vb">
+      <DependentUpon>FormAutorizacion.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormAutorizacion.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormCantidadItems.Designer.vb">
+      <DependentUpon>FormCantidadItems.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormCantidadItems.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormDirecciones.Designer.vb">
+      <DependentUpon>FormDirecciones.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormDirecciones.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPagoCredito.Designer.vb">
+      <DependentUpon>FormPagoCredito.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormPagoCredito.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmComprobantePago.Designer.vb">
+      <DependentUpon>frmComprobantePago.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmComprobantePago.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmCopiaXml.Designer.vb">
+      <DependentUpon>frmCopiaXml.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmCopiaXml.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmDocumentos.Designer.vb">
+      <DependentUpon>frmDocumentos.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmDocumentos.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmEjecutaCompra.Designer.vb">
+      <DependentUpon>frmEjecutaCompra.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmEjecutaCompra.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmReporte.Designer.vb">
+      <DependentUpon>FrmReporte.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FrmReporte.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Help.Designer.vb">
+      <DependentUpon>Help.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Help.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ListaDisplay.Designer.vb">
+      <DependentUpon>ListaDisplay.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ListaDisplay.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBusquedaClientes.Designer.vb">
+      <DependentUpon>FormBusquedaClientes.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBusquedaClientes.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormRazonDialog.Designer.vb">
+      <DependentUpon>FormRazonDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormRazonDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmRegistraUsuario.Designer.vb">
+      <DependentUpon>frmRegistraUsuario.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmRegistraUsuario.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main.Designer.vb">
+      <DependentUpon>Main.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Main.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MsgNotaCredito.Designer.vb">
+      <DependentUpon>MsgNotaCredito.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MsgNotaCredito.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PendientesDialog.Designer.vb">
+      <DependentUpon>PendientesDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="PendientesDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="form_Descuento.Designer.vb">
+      <DependentUpon>form_Descuento.vb</DependentUpon>
+    </Compile>
+    <Compile Include="form_Descuento.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pos.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pos.Designer.vb">
+      <DependentUpon>Pos.vb</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LoginForm.Designer.vb">
+      <DependentUpon>LoginForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="LoginForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Module1.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Productos.Designer.vb">
+      <DependentUpon>Productos.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Productos.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DetalleDescuento.Designer.vb">
+      <DependentUpon>DetalleDescuento.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DetalleDescuento.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="pruebas.Designer.vb">
+      <DependentUpon>pruebas.vb</DependentUpon>
+    </Compile>
+    <Compile Include="pruebas.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RutDialogoCheque.Designer.vb">
+      <DependentUpon>RutDialogoCheque.vb</DependentUpon>
+    </Compile>
+    <Compile Include="RutDialogoCheque.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Settings.vb" />
+    <Compile Include="VendedoresDialog.Designer.vb">
+      <DependentUpon>VendedoresDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="VendedoresDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Web References\apws0006\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\apws0007\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\apws0008\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\ws_lisa\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\ws_pos\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_apws0014\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\apws0028\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\apws0029\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\apws0030\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\apws0031\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\apws0032\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\apws0033\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\apws0034\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\apws0039\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\apws0041\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\apws0042\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\apws0043\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\apws0044\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\apws0045\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\apws0046\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\apws0047\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_apws0051\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_apws0048\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\apws0049\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\apws0051\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\apws0014\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\Ws_Alumnos\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_apws0039\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_apws0033\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_apws0006\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_apws0007\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_apws0008\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_apws0028\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_apws0029\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_apws0030\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_apws0031\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_apws0032\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_apws0034\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_apws0041\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_apws0042\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_apws0043\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_apws0044\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_apws0045\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_apws0046\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_apws0047\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_apws0049\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\_WS_LISA\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AnulaDocumento.resx">
+      <DependentUpon>AnulaDocumento.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BancoDialogoCheque.resx">
+      <DependentUpon>BancoDialogoCheque.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CLientesCuenta.resx">
+      <DependentUpon>CLientesCuenta.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="direccionFacturacion.resx">
+      <DependentUpon>direccionFacturacion.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormAutorizacion.resx">
+      <DependentUpon>FormAutorizacion.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBusquedaClientes.resx">
+      <DependentUpon>FormBusquedaClientes.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormCantidadItems.resx">
+      <DependentUpon>FormCantidadItems.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormDirecciones.resx">
+      <DependentUpon>FormDirecciones.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPagoCredito.resx">
+      <DependentUpon>FormPagoCredito.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormRazonDialog.resx">
+      <DependentUpon>FormRazonDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmComprobantePago.resx">
+      <DependentUpon>frmComprobantePago.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmCopiaXml.resx">
+      <DependentUpon>frmCopiaXml.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmDocumentos.resx">
+      <DependentUpon>frmDocumentos.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmEjecutaCompra.resx">
+      <DependentUpon>frmEjecutaCompra.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmRegistraUsuario.resx">
+      <DependentUpon>frmRegistraUsuario.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmReporte.resx">
+      <DependentUpon>FrmReporte.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Help.resx">
+      <DependentUpon>Help.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ListaDisplay.resx">
+      <DependentUpon>ListaDisplay.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main.resx">
+      <DependentUpon>Main.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MsgNotaCredito.resx">
+      <DependentUpon>MsgNotaCredito.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PendientesDialog.resx">
+      <DependentUpon>PendientesDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="form_Descuento.resx">
+      <DependentUpon>form_Descuento.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pos.resx">
+      <DependentUpon>Pos.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoginForm.resx">
+      <DependentUpon>LoginForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Productos.resx">
+      <DependentUpon>Productos.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="pruebas.resx">
+      <DependentUpon>pruebas.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reportes\ArqueoCaja.rdlc" />
+    <EmbeddedResource Include="DetalleDescuento.resx">
+      <DependentUpon>DetalleDescuento.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RutDialogoCheque.resx">
+      <DependentUpon>RutDialogoCheque.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VendedoresDialog.resx">
+      <DependentUpon>VendedoresDialog.vb</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="My Project\DataSources\System.Data.DataSet.datasource" />
+    <None Include="My Project\DataSources\System.Xml.XmlNode.datasource" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="http://192.168.1.230/wspos/pos.asmx">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\ws_pos\</RelPath>
+      <UpdateFromURL>http://192.168.1.230/wspos/pos.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2_ws_pos_POS</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0006%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\apws0006\</RelPath>
+      <UpdateFromURL>http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0006%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>pos_Steward_apws0006_Pws0006</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.253:8091/testlisainterfazsql2/servlet/apws0006%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_apws0006\</RelPath>
+      <UpdateFromURL>http://192.168.1.253:8091/testlisainterfazsql2/servlet/apws0006%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2__apws0006_Pws0006</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0007%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\apws0007\</RelPath>
+      <UpdateFromURL>http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0007%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>pos_Steward_apws0007_Pws0007</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0007%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_apws0007\</RelPath>
+      <UpdateFromURL>http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0007%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2__apws0007_Pws0007</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0008%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\apws0008\</RelPath>
+      <UpdateFromURL>http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0008%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>pos_Steward_apws0008_Pws0008</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0008%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_apws0008\</RelPath>
+      <UpdateFromURL>http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0008%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2__apws0008_Pws0008</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0014%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\apws0014\</RelPath>
+      <UpdateFromURL>http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0014%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>pos_Steward_Pws0014_Pws0014</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0028%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\apws0028\</RelPath>
+      <UpdateFromURL>http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0028%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>pos_Steward_apws0028_Pws0028</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0014%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_apws0014\</RelPath>
+      <UpdateFromURL>http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0014%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2_apws00141_Pws0014</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0028%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_apws0028\</RelPath>
+      <UpdateFromURL>http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0028%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2__apws0028_Pws0028</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0029%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\apws0029\</RelPath>
+      <UpdateFromURL>http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0029%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>pos_Steward_apws0029_Pws0029</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0029%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_apws0029\</RelPath>
+      <UpdateFromURL>http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0029%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2__apws0029_Pws0029</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0030%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\apws0030\</RelPath>
+      <UpdateFromURL>http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0030%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>pos_Steward_apws0030_Pws0030</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0030%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_apws0030\</RelPath>
+      <UpdateFromURL>http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0030%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2__apws0030_Pws0030</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0031%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\apws0031\</RelPath>
+      <UpdateFromURL>http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0031%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>pos_Steward_apws0031_Pws0031</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0032%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\apws0032\</RelPath>
+      <UpdateFromURL>http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0032%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>pos_Steward_apws0032_Pws0032</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0031%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_apws0031\</RelPath>
+      <UpdateFromURL>http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0031%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2__apws0031_Pws0031</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://localhost/wslisa2/WSLISAERP.asmx">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_WS_LISA\</RelPath>
+      <UpdateFromURL>http://localhost/wslisa2/WSLISAERP.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2__WS_LISA_WS_Lisa</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.230/wslisa/WSLISAERP.asmx">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\ws_lisa\</RelPath>
+      <UpdateFromURL>http://192.168.1.230/wslisa/WSLISAERP.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2_ws_lisa_WS_Lisa</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://localhost:8080/lisainterfazsql2/servlet/apws0032%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_apws0032\</RelPath>
+      <UpdateFromURL>http://localhost:8080/lisainterfazsql2/servlet/apws0032%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2__apws0032_Pws0032</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0033%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\apws0033\</RelPath>
+      <UpdateFromURL>http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0033%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>pos_Steward_apws0033_Pws0033</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0034%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\apws0034\</RelPath>
+      <UpdateFromURL>http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0034%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>pos_Steward_apws0034_Pws0034</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0033%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_apws0033\</RelPath>
+      <UpdateFromURL>http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0033%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2___apws0033_Pws0033</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0034%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_apws0034\</RelPath>
+      <UpdateFromURL>http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0034%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2__apws0034_Pws0034</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0039%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\apws0039\</RelPath>
+      <UpdateFromURL>http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0039%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>pos_Steward_apws0039_Pws0039</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0039%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_apws0039\</RelPath>
+      <UpdateFromURL>http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0039%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2___apws0039_Pws0039</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0041%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\apws0041\</RelPath>
+      <UpdateFromURL>http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0041%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>pos_Steward_apws0041_Pws0041</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0042%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\apws0042\</RelPath>
+      <UpdateFromURL>http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0042%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>pos_Steward_apws0042_Pws0042</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0041%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_apws0041\</RelPath>
+      <UpdateFromURL>http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0041%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2__apws0041_Pws0041</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0043%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\apws0043\</RelPath>
+      <UpdateFromURL>http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0043%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>pos_Steward_apws0043_Pws0043</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0044%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\apws0044\</RelPath>
+      <UpdateFromURL>http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0044%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>pos_Steward_apws0044_Pws0044</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0045%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\apws0045\</RelPath>
+      <UpdateFromURL>http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0045%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>pos_Steward_apws0045_Pws0045</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0046%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\apws0046\</RelPath>
+      <UpdateFromURL>http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0046%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>pos_Steward_apws0046_Pws0046</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0047%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\apws0047\</RelPath>
+      <UpdateFromURL>http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0047%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>pos_Steward_apws0047_Pws0047</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0049%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\apws0049\</RelPath>
+      <UpdateFromURL>http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0049%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>pos_Steward_apws0049_Pws0049</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0051%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\apws0051\</RelPath>
+      <UpdateFromURL>http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0051%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>pos_Steward_apws0051_Pws0051</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0042%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_apws0042\</RelPath>
+      <UpdateFromURL>http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0042%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2__apws0042_Pws0042</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0043%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_apws0043\</RelPath>
+      <UpdateFromURL>http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0043%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2__apws0043_Pws0043</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0044%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_apws0044\</RelPath>
+      <UpdateFromURL>http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0044%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2__apws0044_Pws0044</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0045%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_apws0045\</RelPath>
+      <UpdateFromURL>http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0045%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2__apws0045_Pws0045</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0046%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_apws0046\</RelPath>
+      <UpdateFromURL>http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0046%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2__apws0046_Pws0046</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0047%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_apws0047\</RelPath>
+      <UpdateFromURL>http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0047%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2__apws0047_Pws0047</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0048%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_apws0048\</RelPath>
+      <UpdateFromURL>http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0048%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2_apws00481_Pws0048</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://localhost:8080/lisainterfazsql2/servlet/apws0049%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_apws0049\</RelPath>
+      <UpdateFromURL>http://localhost:8080/lisainterfazsql2/servlet/apws0049%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2__apws0049_Pws0049</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0051%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\_apws0051\</RelPath>
+      <UpdateFromURL>http://192.168.1.253:8091/lisainterfazsql2/servlet/apws0051%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Pos2_apws00511_Pws0051</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://www.steward.cl/ws_web/Service1.asmx">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\Ws_Alumnos\</RelPath>
+      <UpdateFromURL>http://www.steward.cl/ws_web/Service1.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>pos_Steward_Ws_Alumnos_Service1</CachedSettingsPropName>
+    </WebReferenceUrl>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Web References\apws0006\Pws0006.wsdl" />
+    <None Include="Web References\apws0006\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\apws0007\Pws0007.wsdl" />
+    <None Include="Web References\apws0007\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\apws0008\Pws0008.wsdl" />
+    <None Include="Web References\apws0008\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\apws0028\Pws0028.wsdl" />
+    <None Include="Web References\apws0028\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\apws0029\Pws0029.wsdl" />
+    <None Include="Web References\apws0029\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\apws0030\Pws0030.wsdl" />
+    <None Include="Web References\apws0030\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\apws0031\Pws0031.wsdl" />
+    <None Include="Web References\apws0031\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\apws0032\Pws0032.wsdl" />
+    <None Include="Web References\apws0032\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\apws0033\Pws0033.wsdl" />
+    <None Include="Web References\apws0033\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\apws0034\Pws0034.wsdl" />
+    <None Include="Web References\apws0034\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\apws0039\Pws0039.wsdl" />
+    <None Include="Web References\apws0039\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\apws0042\Pws0042.wsdl" />
+    <None Include="Web References\apws0042\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\apws0043\Pws0043.wsdl" />
+    <None Include="Web References\apws0043\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\apws0044\Pws0044.wsdl" />
+    <None Include="Web References\apws0044\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\apws0045\Pws0045.wsdl" />
+    <None Include="Web References\apws0045\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\apws0046\Pws0046.wsdl" />
+    <None Include="Web References\apws0046\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\apws0047\Pws0047.wsdl" />
+    <None Include="Web References\apws0047\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\apws0049\Pws0049.wsdl" />
+    <None Include="Web References\apws0049\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="images\icono_billete.gif" />
+    <None Include="images\icono_cheke.gif" />
+    <None Include="images\icono_debito.gif" />
+    <None Include="images\icono_visa.gif" />
+    <None Include="images\ico_nota.gif" />
+    <None Include="images\iconoBuscar.png" />
+    <None Include="images\borrar.gif" />
+    <None Include="images\detalle.jpg" />
+    <None Include="images\descuento.gif" />
+    <None Include="images\ico_descuento.gif" />
+    <None Include="images\guardar.png" />
+    <None Include="images\abrir-carpeta-amarilla-icono-6565-96.png" />
+    <None Include="images\ABRIR.png" />
+    <None Include="images\icono_clientes.jpg" />
+    <None Include="images\icono_clientes.gif" />
+    <None Include="images\icono-transferencia.jpg" />
+    <None Include="images\find_doc.png" />
+    <None Include="images\boton-pagar.jpg" />
+    <None Include="images\despacho.gif" />
+    <None Include="images\ico_billetera.png" />
+    <None Include="images\billetera.gif" />
+    <None Include="images\icono_clientes2.jpg" />
+    <Content Include="images\logo.png" />
+    <None Include="Web References\ws_pos\pos.disco" />
+    <None Include="Web References\ws_lisa\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\ws_lisa\WSLISAERP.disco" />
+    <None Include="Web References\ws_lisa\WSLISAERP.wsdl" />
+    <None Include="Web References\ws_pos\pos.wsdl" />
+    <None Include="Web References\ws_pos\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_WS_LISA\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_WS_LISA\WSLISAERP.disco" />
+    <None Include="Web References\_apws0014\Pws0014.wsdl" />
+    <None Include="Web References\_apws0014\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_apws0051\Pws0051.wsdl" />
+    <None Include="Web References\_apws0051\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_apws0048\Pws0048.wsdl" />
+    <None Include="Web References\_apws0048\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\app.manifest" />
+    <None Include="Web References\Ws_Alumnos\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\Ws_Alumnos\Service1.disco" />
+    <None Include="Web References\Ws_Alumnos\Service1.wsdl" />
+    <None Include="images\pago_documentos.jpg" />
+    <None Include="images\pago.png" />
+    <None Include="Web References\apws0051\Pws0051.wsdl" />
+    <None Include="Web References\apws0051\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\apws0041\Pws0041.wsdl" />
+    <None Include="Web References\apws0041\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\apws0014\Pws0014.wsdl" />
+    <None Include="Web References\apws0014\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_apws0039\Pws0039.wsdl" />
+    <None Include="Web References\_apws0039\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_apws0033\Pws0033.wsdl" />
+    <None Include="Web References\_apws0033\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_apws0006\Pws0006.wsdl" />
+    <None Include="Web References\_apws0006\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_apws0007\Pws0007.wsdl" />
+    <None Include="Web References\_apws0007\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_apws0008\Pws0008.wsdl" />
+    <None Include="Web References\_apws0008\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_apws0028\Pws0028.wsdl" />
+    <None Include="Web References\_apws0028\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_apws0029\Pws0029.wsdl" />
+    <None Include="Web References\_apws0029\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_apws0030\Pws0030.wsdl" />
+    <None Include="Web References\_apws0030\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_apws0031\Pws0031.wsdl" />
+    <None Include="Web References\_apws0031\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_apws0032\Pws0032.wsdl" />
+    <None Include="Web References\_apws0032\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_apws0034\Pws0034.wsdl" />
+    <None Include="Web References\_apws0034\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_apws0041\Pws0041.wsdl" />
+    <None Include="Web References\_apws0041\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_apws0042\Pws0042.wsdl" />
+    <None Include="Web References\_apws0042\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_apws0043\Pws0043.wsdl" />
+    <None Include="Web References\_apws0043\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_apws0044\Pws0044.wsdl" />
+    <None Include="Web References\_apws0044\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_apws0045\Pws0045.wsdl" />
+    <None Include="Web References\_apws0045\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_apws0046\Pws0046.wsdl" />
+    <None Include="Web References\_apws0046\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_apws0047\Pws0047.wsdl" />
+    <None Include="Web References\_apws0047\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_apws0049\Pws0049.wsdl" />
+    <None Include="Web References\_apws0049\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Web References\_WS_LISA\WSLISAERP.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\StewardLib\StewardLib.vbproj">
+      <Project>{11C5E8F2-D001-4B1F-A024-2F02F050BF22}</Project>
+      <Name>StewardLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GeneraTXT\GeneraTXT.csproj">
+      <Project>{2b6373a5-3486-4438-a4ed-0719e95e09ad}</Project>
+      <Name>GeneraTXT</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

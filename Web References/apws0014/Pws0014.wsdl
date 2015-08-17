@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="INTERFAZ LISA" xmlns:wsdlns="INTERFAZ LISA" name="Pws0014" targetNamespace="INTERFAZ LISA" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" elementFormDefault="qualified" targetNamespace="INTERFAZ LISA">
+      <xsd:element name="Pws0014.Execute">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="Xml_entrada" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Pws0014.ExecuteResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="Xml_salida" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </types>
+  <message name="Pws0014.ExecuteSoapIn">
+    <part name="parameters" element="wsdlns:Pws0014.Execute" />
+  </message>
+  <message name="Pws0014.ExecuteSoapOut">
+    <part name="parameters" element="wsdlns:Pws0014.ExecuteResponse" />
+  </message>
+  <portType name="Pws0014SoapPort">
+    <operation name="Execute">
+      <input message="wsdlns:Pws0014.ExecuteSoapIn" />
+      <output message="wsdlns:Pws0014.ExecuteSoapOut" />
+    </operation>
+  </portType>
+  <binding name="Pws0014SoapBinding" type="wsdlns:Pws0014SoapPort">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="Execute">
+      <soap:operation soapAction="INTERFAZ LISAaction/APWS0014.Execute" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="Pws0014">
+    <port name="Pws0014SoapPort" binding="wsdlns:Pws0014SoapBinding">
+      <soap:address location="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0014" />
+    </port>
+  </service>
+</definitions>

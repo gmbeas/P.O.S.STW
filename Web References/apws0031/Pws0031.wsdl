@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="LisaWs70" xmlns:wsdlns="LisaWs70" name="Pws0031" targetNamespace="LisaWs70" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" elementFormDefault="qualified" targetNamespace="LisaWs70">
+      <xsd:element name="Pws0031.Execute">
+        <xsd:complexType>
+          <xsd:sequence />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Pws0031.ExecuteResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="Xml_salida" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </types>
+  <message name="Pws0031.ExecuteSoapIn">
+    <part name="parameters" element="wsdlns:Pws0031.Execute" />
+  </message>
+  <message name="Pws0031.ExecuteSoapOut">
+    <part name="parameters" element="wsdlns:Pws0031.ExecuteResponse" />
+  </message>
+  <portType name="Pws0031SoapPort">
+    <operation name="Execute">
+      <input message="wsdlns:Pws0031.ExecuteSoapIn" />
+      <output message="wsdlns:Pws0031.ExecuteSoapOut" />
+    </operation>
+  </portType>
+  <binding name="Pws0031SoapBinding" type="wsdlns:Pws0031SoapPort">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="Execute">
+      <soap:operation soapAction="LisaWs70action/APWS0031.Execute" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="Pws0031">
+    <port name="Pws0031SoapPort" binding="wsdlns:Pws0031SoapBinding">
+      <soap:address location="http://192.168.1.230:8090/lisainterfazsqln/servlet/apws0031" />
+    </port>
+  </service>
+</definitions>
