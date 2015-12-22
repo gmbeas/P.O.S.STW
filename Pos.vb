@@ -3,7 +3,11 @@ Imports System.Xml
 Imports System.Drawing.Printing
 Imports Microsoft.VisualBasic
 Imports System
+Imports System.IO
+Imports System.Xml.Serialization
 Imports GeneraTXT.GeneraDocumento
+Imports TbkLibSTW
+Imports TbkLibSTW.Models
 
 
 Public Class Pos
@@ -22,6 +26,8 @@ Public Class Pos
     Dim objVal As New STWVal
     Dim objTrans As New Trans
     Dim ventarecuperada = "N"
+    Dim PromoNombre as String
+   
 
     Private WithEvents xDialogo As New Productos
     Private WithEvents xVendedor As New VendedoresDialog
@@ -33,6 +39,8 @@ Public Class Pos
     Private WithEvents xBusquedaCliente As New FormBusquedaClientes
     Private WithEvents Xautorizacion As New FormAutorizacion
     Private WithEvents XDirecciones As New FormDirecciones
+
+    Private WithEvents xPromocionTercera As New Promocion
     ' Private WithEvents XDireccionesPorPagar As New FormDireccionesPorPagar
 
     Private WithEvents XDocumentosCliente As New CLientesCuenta
@@ -42,6 +50,8 @@ Public Class Pos
     Private WithEvents XFormularioPagos As New CLientesCuenta
     Private WithEvents XFormularioPagosAplicar As New CLientesCuenta
     Private WithEvents XFormCantidad As New FormCantidadItems
+
+    Private WithEvents xTBK As New frmTrans
 
     Private WithEvents XCopiaXml As New frmCopiaXml
 
@@ -73,7 +83,7 @@ Public Class Pos
                     Dim objCuentaController As New CuentaCorriente
                     _CuentaCorriente = objCuentaController.GetCuenta("STE", txtRut.Text, _FechaSistema, _FechaSistema, _FechaSistema, _FechaSistema)
                 End If
-                
+
                 _perfilCliente = objPerfilCliente
 
                 txtNombreCliente.Text = objPerfilCliente.Nombre
@@ -114,34 +124,56 @@ Public Class Pos
                 'Me.txtCodigo.Enabled = True
                 'txtCodigo.TabIndex = 0
 
-                Dim rutx As Integer = txtRut.Text.Remove(txtRut.Text.Length - 2, 2)
-                Dim deudro As Boolean = False
-                Dim nCobrador As String = ""
-                Dim objcliente As New ClientesController
-                Dim obj As FichaCobranzaObj = objcliente.EstadoFinanciero(rutx.ToString)
-                For Each o As DocumentoCobranzaObj In obj.Documentos
-                    Dim fechavencimiento = Convert.ToDateTime(o.FechaVencimiento)
-                    Dim fechahoy As DateTime
-                    Dim fechamenos90 = fechahoy.Now.AddDays(-90)
-                    If fechavencimiento < fechamenos90 Then
-                        If o.SaldoXPagar > 0 Then
-                            deudro = True
-                            nCobrador = o.Cobrador.Trim()
+                Dim objLisa = New ws_lisa.WS_Lisa
+
+                If txtRut.Text <> "" And txtRut.Text <> "10-8" Then
+                    Dim rutx As Integer = txtRut.Text.Remove(txtRut.Text.Length - 2, 2)
+                    If _Deudores = 1 Then
+
+                        Dim deudro As Boolean = False
+                        Dim nCobrador As String = ""
+                        Dim objcliente As New ClientesController
+                        Dim obj As FichaCobranzaObj = objcliente.EstadoFinanciero(rutx.ToString)
+                        For Each o As DocumentoCobranzaObj In obj.Documentos
+                            Dim fechavencimiento = Convert.ToDateTime(o.FechaVencimiento)
+                            Dim fechahoy As DateTime
+                            Dim fechamenos90 = fechahoy.Now.AddDays(-90)
+                            If fechavencimiento < fechamenos90 Then
+                                If o.SaldoXPagar > 0 Then
+                                    deudro = True
+                                    nCobrador = o.Cobrador.Trim()
+                                End If
+
+                            End If
+
+                        Next
+
+                        If deudro = True Then
+                            Dim xx = objcliente.ConsultaCobrador(nCobrador)
+                            Dim mensaje = "El cliente: " + vbCrLf +
+                                        objPerfilCliente.Nombre + vbCrLf +
+                                        "TIENE DEUDA(S) VENCIDAD POR MAS DE 90 DIAS" + vbCrLf +
+                                        "Favor contactar al cobrador asigando: " + vbCrLf +
+                                        xx.Trim() + vbCrLf + "para obtener mas información, contactar al jefe de local."
+                            MessageBox.Show(mensaje, "Información de deuda", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
                         End If
 
                     End If
 
-                Next
+                    Dim dsCredito = objLisa.ConsultaPos("CRE", "STE", "", rutx, "", 0, "", "")
+                    Dim drCredito = dsCredito.Tables(0).Rows(0)
+                    Dim retornoCredito = Convert.ToInt32(drCredito("Autoriza").ToString())
+                    If retornoCredito = 1 Then
+                        PictureBox5.Visible = True
+                        btn_Credito_Steward.Visible = True
+                        txtResumenCreditoSteward.Visible = True
+                    ElseIf retornoCredito = 0 Then
+                        _DeudorCheque = True
+                    End If
 
-                If deudro = True Then
-                    Dim xx = objcliente.ConsultaCobrador(nCobrador)
-                    Dim mensaje = "El cliente: " + vbCrLf +
-                                objPerfilCliente.Nombre + vbCrLf +
-                                "TIENE DEUDA(S) VENCIDAD POR MAS DE 90 DIAS" + vbCrLf +
-                                "Favor contactar al cobrador asigando: " + vbCrLf +
-                                xx.Trim() + vbCrLf + "para obtener mas información, contactar al jefe de local."
-                    MessageBox.Show(mensaje, "Información de deuda", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+
                 End If
+
 
 
             Else
@@ -262,7 +294,14 @@ Public Class Pos
         Me.gridDetalle.Columns.Add("Porcentaje", "%")
         Me.gridDetalle.Columns("Porcentaje").DataPropertyName = "PorcentajeDescuento"
 
+
+        Me.gridDetalle.Columns.Add("CBruto", "CBruto")
+        Me.gridDetalle.Columns("CBruto").DataPropertyName = "CBruto"
+       
+
         Me.gridDetalle.Columns("Porcentaje").Width = 30
+
+
 
         Dim columaimagen As New DataGridViewImageColumn
 
@@ -290,7 +329,7 @@ Public Class Pos
         Me.cheque_grid_cheque.Columns.Add("Fecha", "Fecha")
         Me.cheque_grid_cheque.Columns("Fecha").DataPropertyName = "Fecha"
         Me.cheque_grid_cheque.Columns("Fecha").Width = 80
-        Me.cheque_grid_cheque.Columns("Fecha").ReadOnly = True
+        Me.cheque_grid_cheque.Columns("Fecha").ReadOnly = False
 
         Me.cheque_grid_cheque.Columns.Add("Monto", "Monto")
         Me.cheque_grid_cheque.Columns("Monto").DataPropertyName = "Monto"
@@ -356,7 +395,31 @@ Public Class Pos
         _TerminoPagoDebito = _GetTerminoPagoDebito()
         _MontoCreditoSteward = _GetMontoCreditoSteward()
         _cab_Id = 0
+        TransbankCheck(true)
 
+
+
+
+    End Sub
+
+    Public Sub TransbankCheck(_estadoTBK As Boolean)
+           if _estadoTBK = True Then
+            PictureBox4.Visible = False
+            btn_Compra_credito.Visible = False
+            btnCompraDebito.Visible = False
+            txtResumenCredito.Visible = False
+            txtResumenDebito.Visible = False
+            txtResumenDebitoCredito.Visible = True
+            btnDebitoCredito.Visible = True
+            else
+             PictureBox4.Visible = True
+            btn_Compra_credito.Visible = True
+            btnCompraDebito.Visible = True
+            txtResumenCredito.Visible = True
+            txtResumenDebito.Visible = True
+            txtResumenDebitoCredito.Visible = False
+            btnDebitoCredito.Visible = False
+           End If
     End Sub
 
 
@@ -676,24 +739,67 @@ Public Class Pos
     Protected Sub CalculaSubTotal()
         Dim contador As Integer = 0
         Dim subtotal As Double
+        Dim subbruto As Double
+        Dim subiva As Double
+
         Dim var As Integer = 0
 
         If gridDetalle.RowCount > 0 Then
 
 
             For Each gr As DataGridViewRow In gridDetalle.Rows
+                Dim xxx = gr.Cells("Cant").Value.ToString
                 contador = contador + 1
                 Dim cantidad As Integer = 0
-                If Not IsNothing(gr.Cells("Cant").Value) Then
-                    cantidad = Int32.Parse(gr.Cells("Cant").Value)
+                If Not IsNothing(gr.Cells("Cant").Value.ToString()) Then
+                    cantidad = Int32.Parse(gr.Cells("Cant").Value.ToString())
                 End If
+
+                Dim au = Integer.Parse(gr.Cells("CBruto").Value.ToString.Replace(".", ""))
+                Dim au1 = Integer.Parse(gr.Cells("CNeto").Value.ToString.Replace(".", ""))
+                Dim au2 = Integer.Parse(gr.Cells("CIva").Value.ToString.Replace(".", ""))
 
                 Dim precio As Integer = Integer.Parse(gr.Cells("Precioiva").Value.ToString.Replace(".", ""))
                 Dim precioneto As Integer = Integer.Parse(gr.Cells("precio").Value.ToString.Replace(".", ""))
 
 
-                subtotal = (cantidad * precioneto) + subtotal
+                subtotal = subtotal + (au1 * cantidad) '(cantidad * precioneto) + subtotal
+                subbruto = subbruto + (au * cantidad)
+                subiva = subiva + (au2 * cantidad)
             Next
+
+            'Dim neto As Double
+            'dim netoAplicado as Double
+
+            'neto =  (subbruto / 1.19)
+
+            'Me.txtSubTotal.Text = neto.ToString("N0")
+
+            'AplicaDescuentos()
+
+            'If txtDescuento.Text <> "" Then
+            '     netoAplicado = neto - Double.Parse(txtDescuento.Text)
+            '     txtBruto.Text = netoAplicado.ToString("N0")
+            '     Me.btnDetalleDescuento.Enabled = True
+            '    else
+            '      netoAplicado = neto
+            '      txtBruto.Text = netoAplicado.ToString("N0")
+            'End If
+
+           
+            ''If txtDescuento.Text <> "" Then
+            ''    bruto = subtotal - Double.Parse(txtDescuento.Text)
+            ''    txtBruto.Text = bruto.ToString("N0")
+            ''    Me.btnDetalleDescuento.Enabled = True
+            ''Else
+            ''    bruto = (subbruto / 1.19).ToString("N0")
+            ''    txtBruto.Text = bruto.ToString("N0")
+            ''End If
+
+            ''verificaOpcionPagar()
+            'CalculaIvaYTotalfinal(netoAplicado)
+
+            'verificaOpcionPagar()
 
             Me.txtSubTotal.Text = subtotal.ToString("N0")
             AplicaDescuentos()
@@ -708,7 +814,7 @@ Public Class Pos
                 txtBruto.Text = bruto.ToString("N0")
             End If
 
-            CalculaIvaYTotalfinal(bruto)
+            CalculaIvaYTotalfinal(subbruto)
         Else
             txtIva.Text = ""
             txtBruto.Text = ""
@@ -723,25 +829,42 @@ Public Class Pos
 
     Protected Sub CalculaIvaYTotalfinal(ByVal bruto As Integer)
 
-
-        If txtResumenDespacho.Text <> "" Then
-            Dim flete As Double = Double.Parse(txtResumenDespacho.Text)
+        Dim wsLisa As New ws_lisa.WS_Lisa
+            
+            Dim flete As Double = 0
+            If txtResumenDespacho.Text <> ""
+                    flete = Double.Parse(Me.txtResumenDespacho.Text)
+            End If
             Dim subtotal As Double = Double.Parse(Me.txtSubTotal.Text)
             Dim descuento As Double = 0
-
-            If txtDescuento.Text <> "" Then
-                descuento = Double.Parse(txtDescuento.Text)
+            If txtPorcentajeDescuento.Text <> ""
+                descuento = Double.Parse(Me.txtPorcentajeDescuento.Text)
             End If
-            txtBruto.Text = ((subtotal - descuento) + flete).ToString("N0")
-            bruto = Double.Parse(txtBruto.Text)
-        End If
 
 
-        Dim iva As Integer = bruto * 19
-        iva = iva / 100
+            Dim ds = wsLisa.ConsultaPos("RECALFD", "", "", bruto, subtotal, descuento, flete, "")
+            If ds.Tables(0).Rows.Count <> 0 Then
+                Dim dr As DataRow = ds.Tables(0).Rows(0)
+                Dim pp = dr("Descuento").ToString
+               txtBruto.Text = Convert.ToDouble(dr("Neto")).ToString("N0")
+                Me.txtIva.Text =Convert.ToDouble(dr("Iva")).ToString("N0")
+                Me.txtFinal.Text = Convert.ToDouble(dr("Bruto")).ToString("N0")
+            End If
 
-        Me.txtIva.Text = iva.ToString("N0")
-        Me.txtFinal.Text = (bruto + iva).ToString("N0")
+
+            'If txtDescuento.Text <> "" Then
+            '    descuento = Double.Parse(txtDescuento.Text)
+            'End If
+            'txtBruto.Text = ((subtotal - descuento) + flete).ToString("N0")
+            'bruto = Double.Parse(txtBruto.Text)
+           
+
+
+        'Dim iva As Integer = bruto * 19
+        'iva = iva / 100
+
+        'Me.txtIva.Text = subiva.ToString("N0")
+        'Me.txtFinal.Text = subbruto.ToString("N0") ''(bruto + iva).ToString("N0")
         verificaOpcionPagar()
 
 
@@ -791,11 +914,19 @@ Public Class Pos
 
     Public Sub IngresaCantidadArticulo(ByVal cantidad As Integer)
 
-
-        If gridDetalle.Rows.Count >= _NumeroLineas And TipoDocumentoVenta() = "FAAF" Then
-            MsgBox("se ha superado el maximo de Items Permitido para este Documento", MsgBoxStyle.Information)
-            Exit Sub
+        If Helper.Multifactura = False Then
+            If gridDetalle.Rows.Count >= _NumeroLineas And TipoDocumentoVenta() = "FAAF" Then
+                If MessageBox.Show("Se ha superado el máximo de items para este documento, desea continuar o cancelar factura", "Información", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+                    'continua ingresando
+                    Helper.Multifactura = True
+                Else
+                    'cancela ingreso y hay que cerrar documento
+                    Helper.Multifactura = False
+                    Exit Sub
+                End If
+            End If
         End If
+
 
         If UCase(txtDescripcionProducto.Text) = "INVALIDO" Then
             MsgBox("Articulo Invalido", MsgBoxStyle.Information, "Error")
@@ -962,17 +1093,38 @@ Public Class Pos
             If _tipoDocumentoVenta = "FAAF" Then
                 DOC = "FACTURA"
             End If
+          
 
-            If _MENSAJE_CONFIRMACION("¿DESEA CERRAR LA VENTA CON EL DOCUMENTO: " + DOC + "  NUMERO: " + txtCorrelativo.Text, "STEWARD") = True Then
+
+            Dim Mensaje = String.Empty
+            If Helper.Multifactura = True Then   'SI ES MULTIFACTURA
+                Dim ppax = gridDetalle.Rows.Count
+
+                Dim clineasarr3 = Convert.ToDouble(ppax)
+                Dim ai = Convert.ToInt32(Math.Ceiling(clineasarr3 / _NumeroLineas))
+
+                Helper.MultiFacturaCantidad = ai
+
+
+                Dim arrayFolios(ai - 1) As String
+                arrayFolios(0) = txtCorrelativo.Text
+
+                For i As Integer = 1 To (ai - 1)
+                    arrayFolios(i) = (Convert.ToInt32(txtCorrelativo.Text) + i).ToString()
+                Next
+                Helper.MultifacturaArray = arrayFolios
+                Mensaje = "¿DESEA CERRAR LA VENTA CON LOS DOCUMENTOS: " + DOC + " NUMEROS: " + String.Join(",", arrayFolios)
+            Else 'NO ES MULTIFACTURA
+                Mensaje = "¿DESEA CERRAR LA VENTA CON EL DOCUMENTO: " + DOC + "  NUMERO: " + txtCorrelativo.Text
+            End If
+
+
+
+            If _MENSAJE_CONFIRMACION(Mensaje, "STEWARD") = True Then
 
                 Dim objVenta As VentaObj = VentaSetParametros()
                 objVenta.PerfilCliente = _perfilCliente
 
-
-                Dim p As Int32 = 1
-
-
-                Dim pp(objVenta.ListaArticulos.Count - 1) As String
 
                 Dim esdescuento As Boolean = False
 
@@ -980,7 +1132,14 @@ Public Class Pos
                     esdescuento = True
                 End If
 
-                Dim resultadoEjecutaVenta As Boolean = Ejecutaventa(objVenta)
+                Dim resultadoEjecutaVenta As Boolean
+                If Helper.Multifactura = True Then
+                    resultadoEjecutaVenta = EjecutaventaMulti(objVenta)
+                Else
+                    resultadoEjecutaVenta = Ejecutaventa(objVenta)
+
+                End If
+
 
                 If resultadoEjecutaVenta = True Then
 
@@ -989,9 +1148,20 @@ Public Class Pos
 
                     'Actualiza correlativo
                     If txtCorrelativo.Text <> "" Then
-                        Dim Folio As Integer = Int32.Parse(Me.txtCorrelativo.Text)
 
-                        objDocumentoVenta.ActualizaCorrelativo(_Sede, _PuntoFacturacion, _tipoDocumentoVenta, Folio)
+                        If Helper.Multifactura = True Then
+                            For i As Integer = 0 To Helper.MultifacturaArray.Length - 1
+                                Dim Folio = Int32.Parse(Helper.MultifacturaArray(i))
+                                objDocumentoVenta.ActualizaCorrelativo(_Sede, _PuntoFacturacion, _tipoDocumentoVenta, Folio)
+                            Next
+                        Else
+                            Dim Folio As Integer = Int32.Parse(Me.txtCorrelativo.Text)
+                            objDocumentoVenta.ActualizaCorrelativo(_Sede, _PuntoFacturacion, _tipoDocumentoVenta, Folio)
+                        End If
+
+
+
+
                     End If
 
 
@@ -1014,18 +1184,29 @@ Public Class Pos
 
                         If TipoDocumentoVenta() = "FAAF" Then
 
-                            Dim ppa = New GeneraDocumento()
-                            Dim aaa1 = ppa.Docu(objVenta)
 
-                            objVentaController.GeneraDocumentoImpresionFactura(objVenta, esdescuento)
-                            objDoc.CambiaEstadoImpresion(objVenta.Correlativo, "FAAF", 1)
+
+
+                            If Helper.Multifactura = True Then
+                                objVentaController.GeneraDocumentoImpresionFacturaMultiple(objVenta, esdescuento)
+                                objDoc.CambiaEstadoImpresion(objVenta.Correlativo, "FAAF", 1)
+                            Else
+                                objVentaController.GeneraDocumentoImpresionFactura(objVenta, esdescuento)
+                                objDoc.CambiaEstadoImpresion(objVenta.Correlativo, "FAAF", 1)
+
+                            End If
+
                         Else
                             objVentaController.GeneraDocumentoImpresionBoleta(objVenta)
                             objDoc.CambiaEstadoImpresion(objVenta.Correlativo, "BOVT", 1)
                         End If
 
+
+                        
                         MsgBox("VENTA FINALIZADA", MsgBoxStyle.Information, "VENTA")
                         Me.btnPagar.Enabled = False
+                        Helper.Multifactura = False
+                        Me.chkOferta.Checked = False
                         ArregloItems.Clear()
                         objVenta.ListaArticulos.Clear()
                         objVenta = Nothing
@@ -1157,8 +1338,6 @@ Public Class Pos
 
 
     Private Sub btnPagar_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnPagar.Click
-        'objDocumentoVenta.ActualizaCorrelativo("30", "90", "BOLVT", "1162685")
-
         AccionFinalizaVenta()
     End Sub
 
@@ -1270,7 +1449,7 @@ Public Class Pos
 
 
 
-            ds = Me.WS_POS.POS_ActualizaCabecera("N", _Empresa, _Bodega, _Pos, _tipoDocumentoVenta, objventa.Correlativo, _FechaSistema, txtCodigoVendedor.Text, objventa.Cod_Cliente, txtListaPrecio.Text, EstadoCabesera, id_Cajero, porcentajecabesera, 0, 0, 0, 0, 0, "", 2, 0, 0, "", 0, 0, 0, "", 0, 0, "")
+            ds = Me.WS_POS.POS_ActualizaCabecera("N", _Empresa, _Bodega, _Pos, _tipoDocumentoVenta, objventa.Correlativo, _FechaSistema, txtCodigoVendedor.Text, objventa.Cod_Cliente, txtListaPrecio.Text, EstadoCabesera, id_Cajero, porcentajecabesera, 0, 0, 0, 0, 0, "", 2, 0, 0, "", 0, 0, 0, "", 0, 0, PromoNombre)
             dr = ds.Tables(0).Rows(0)
             _cab_Id = Int32.Parse(dr(0).ToString)
 
@@ -1279,8 +1458,9 @@ Public Class Pos
 
             ' Actualiza Detalle
             For Each fila As DataGridViewRow In gridDetalle.Rows
-
-                Dim dsDetalle As DataSet = Me.WS_POS.POS_ActualizaDetalle("N", _Empresa, _Bodega, _Pos, _tipoDocumentoVenta, objventa.Correlativo, fila.Cells("codigo").Value, fila.Cells("unidadmedida").Value, fila.Cells("cant").Value, 0, 0, 0, fila.Cells("precio").Value, "")
+                Dim Dato = ""
+               
+                Dim dsDetalle As DataSet = Me.WS_POS.POS_ActualizaDetalle("N", _Empresa, _Bodega, _Pos, _tipoDocumentoVenta, objventa.Correlativo, fila.Cells("codigo").Value, fila.Cells("unidadmedida").Value, fila.Cells("cant").Value, 0, 0, 0, fila.Cells("precio").Value, Dato)
                 Dim drDetalle As DataRow = dsDetalle.Tables(0).Rows(0)
             Next
 
@@ -1435,6 +1615,43 @@ Public Class Pos
 
     End Sub
 
+     Private Sub accionBotonCompraDebitoCredito()
+
+
+        If validaDetallePagos() = False Then
+            Exit Sub
+        End If
+
+
+
+        If PagoRestante() <> 0 Or debito_Banco.Text <> "" Then
+
+            If TabMedioPago.TabPages.Count <> 0 Then
+                If TabMedioPago.TabPages(0).Name <> "TabDebito" Then
+                    Me.RemoverPaneles()
+                    Me.TabMedioPago.TabPages.Add(TabTransbank)
+                End If
+            Else
+                Me.RemoverPaneles()
+                Me.TabMedioPago.TabPages.Add(TabTransbank)
+            End If
+
+            If txtResumenDebitoCredito.Text = "" Then
+                txtResumenDebitoCredito.Text = PagoRestante.ToString("N0")
+            End If
+            txtResumenDebitoCredito.ReadOnly = False
+            txtResumenDebitoCredito.Focus()
+
+            ValidaTotaldePagos()
+        Else
+            MsgBox("ya esta cancelado el total de la compra", MsgBoxStyle.Information, "STEWARD")
+
+        End If
+
+
+
+
+    End Sub
 
     Private Sub accionBotonCompraDebito()
 
@@ -1536,10 +1753,19 @@ Public Class Pos
 
         Dim valor As Boolean = False
 
-        If monto >= _MontoCreditoSteward Then
+        'If monto >= _MontoCreditoSteward Then
+        '    valor = True
+        'End If
+
+        'Return valor
+
+
+        Dim objLisa = New ws_lisa.WS_Lisa
+        Dim ds = objLisa.ConsultaPos("CRE", "STE", "", "15747893", "", monto, "", "")
+        Dim dr = ds.Tables(0).Rows(0)
+        If dr("Autoriza").ToString() <> "1" Then
             valor = True
         End If
-
         Return valor
 
     End Function
@@ -1558,6 +1784,12 @@ Public Class Pos
         If Me.txtResumenDebito.Text <> "" Then
             total = total + Double.Parse(txtResumenDebito.Text)
         End If
+
+         If Me.txtResumenDebitoCredito.Text <> "" Then
+            total = total + Double.Parse(txtResumenDebitoCredito.Text)
+        End If
+
+
         If Me.txtResumenCredito.Text <> "" Then
             total = total + Double.Parse(txtResumenCredito.Text)
         End If
@@ -1668,6 +1900,13 @@ Public Class Pos
         Me.gridDetalle.Columns("Descuento").Visible = False
         Me.gridDetalle.Columns("DescuentoLinea").DisplayIndex = 7
 
+        'me.gridDetalle.Columns("Iva").DisplayIndex = 10
+        'me.gridDetalle.Columns("Neto").DisplayIndex = 10
+        'me.gridDetalle.Columns("Iva").Visible = False
+        'me.gridDetalle.Columns("Neto").Visible = False
+
+
+
         ' Me.gridDetalle.Columns("valorReal").Visible = True
     End Sub
 
@@ -1691,7 +1930,7 @@ Public Class Pos
 
                 Dim gwr As DataGridViewRow = Me.gridDetalle.Rows(sender.currentcell.rowindex)
 
-                If MsgBox("Desea Eliminar: " + gwr.Cells("Descripcion").Value & _
+                If MsgBox("Desea Eliminar: " + gwr.Cells("Descripcion").Value &
                     " ??", vbQuestion + vbYesNo) = vbYes Then
 
                     EliminaArticulo(gwr.Cells("Codigo").Value)
@@ -2065,36 +2304,47 @@ Public Class Pos
 
 
     Public Sub AccionBotonCheque()
-        If validaDetallePagos() = True Then
+        If validaDetallePagos() = False Then
+            Exit Sub
+        End If
 
-            If PagoRestante() <> 0 Or txtResumenCheque.Text <> "" Then
+        If PagoRestante() <> 0 Or txtResumenCheque.Text <> "" Then
 
-                If txtResumenCheque.Text = "" Then
-                    RemoverPaneles()
+            If TabMedioPago.TabPages.Count <> 0 Then
+                If TabMedioPago.TabPages(0).Name <> "TabDebito" Then
+                    Me.RemoverPaneles()
                     Me.TabMedioPago.TabPages.Add(btn_Condicion_Pago)
-
-                    accionBotonCheque2()
-                    ValidaTotaldePagos()
-                    Me.Cheque_txt_Cantidad.Focus()
-                Else
-
-                    Me.txtResumenCheque.ReadOnly = False
-                    Me.txtResumenCheque.Focus()
-                    Me.TabMedioPago.TabPages.Clear()
-                    Me.TabMedioPago.TabPages.Add(Me.btn_Condicion_Pago)
-                    accionBotonCheque2()
-                    ValidaTotaldePagos()
-                    Me.Cheque_txt_Cantidad.Focus()
-
-
                 End If
             Else
+                Me.RemoverPaneles()
+                Me.TabMedioPago.TabPages.Add(btn_Condicion_Pago)
+            End If
 
-                MsgBox("ya esta cancelado el total de la compra", MsgBoxStyle.Information, "STEWARD")
+            If txtResumenCheque.Text = "" Then
+                txtResumenCheque.Text = PagoRestante.ToString("N0")
+            End If
+            accionBotonCheque2()
+            txtResumenCheque.ReadOnly = False
+            txtResumenCheque.Focus()
+            txtResumenCheque.Enabled = True
+            If _DeudorCheque = True Then
+
+                Cheque_txt_Cantidad.Text = "1"
+
+                Call Cheque_txt_Cantidad_KeyDown(Cheque_txt_Cantidad, New KeyEventArgs(Keys.Enter))
+                Cheque_txt_Cantidad.Enabled = False
+
 
             End If
 
+
+            ValidaTotaldePagos()
+        Else
+            MsgBox("ya esta cancelado el total de la compra", MsgBoxStyle.Information, "STEWARD")
+
         End If
+
+
 
     End Sub
 
@@ -2652,20 +2902,28 @@ Public Class Pos
             ValidaTotaldePagos()
 
             If SobrepasaCreditoSteward(Double.Parse(txtResumenCreditoSteward.Text)) = True Then
-                If _MENSAJE_CONFIRMACION("Cifra sobre Limite de Credito, desea Ingresar Credito con Aprobación de Supervisor", "Credito") = True Then
 
-                    'Xautorizacion.Tipo.Text = "Credito"
-                    'Xautorizacion.ShowDialog()
+                MessageBox.Show("Cifra sobre Limite de Credito, contacte al jefe de tienda", "Credito")
+
+                'If _MENSAJE_CONFIRMACION("Cifra sobre Limite de Credito, desea Ingresar Credito con Aprobación de Supervisor", "Credito") = True Then
+
+                '    'Xautorizacion.Tipo.Text = "Credito"
+                '    'Xautorizacion.ShowDialog()
+                '    ValidaTotaldePagos()
+
+
+                'Else
+                If AprobacionExcesoCreditoSteward = False Then
+                    Me.txtResumenCreditoSteward.Text = ""
+                    Me.TabMedioPago.TabPages.Remove(TabCreditoSteward)
                     ValidaTotaldePagos()
-
-
-                Else
-                    If AprobacionExcesoCreditoSteward = False Then
-                        Me.txtResumenCreditoSteward.Text = ""
-                        ValidaTotaldePagos()
-                        Exit Sub
-                    End If
+                    Exit Sub
                 End If
+                'End If
+
+            Else
+                txtCreditoRut.Text = txtRut.Text
+                txtCredito_OrdendeCompra.Focus()
 
 
             End If
@@ -3302,6 +3560,44 @@ Public Class Pos
 
 
 
+    Public Function CalculaTotalesMultifactura(lista As ArrayList) As Array
+        Dim nlineas = _NumeroLineas
+
+        Dim arr4 = New String(Helper.MultiFacturaCantidad - 1) {}
+
+        Dim inicio = 0
+        Dim fin = nlineas
+        If fin > lista.Count() Then
+            fin = lista.Count()
+        End If
+
+        For i As Integer = 0 To Helper.MultiFacturaCantidad - 1
+            Dim suma = 0
+            For j As Integer = inicio To fin - 1
+
+                Dim contenido As ArticuloStringObj = lista(j)
+                Dim dato = Convert.ToInt32(contenido.CNeto * contenido.cantidad)
+                suma = suma + dato
+                
+                'Console.WriteLine(contenido)
+            Next
+
+            Dim aux = (suma * 0.19)
+            Dim aux2 = suma + aux
+            arr4(i) = aux2.ToString()
+            'Console.WriteLine("Corte")
+            inicio = inicio + nlineas
+
+            fin = fin + nlineas
+            If fin > lista.Count() Then
+                fin = lista.Count()
+            End If
+        Next
+
+        Return arr4
+    End Function
+
+#Region "Ejecutaventa"
     Public Function Ejecutaventa(ByVal objventa As VentaObj) As Boolean
         Dim valorRetorno As Boolean = True
         concepto = _Concepto
@@ -3372,7 +3668,7 @@ Public Class Pos
         'CERO
         Dim cargo_lineas_Condicion As String = objventa.ListaArticulos.Count.ToString()
         'DESCUENTO DE CABESERA, DESCUENTO VALOR TOTAL EN PORCENTAJE
-        Dim cargo_descuento1 As String = objventa.PorcentajeDescuento
+        Dim cargo_descuento1 As String = objventa.PorcentajeDescuento.ToString().Replace(",", ".")
         Dim cargo_descuento2 As String = "0"
         Dim cargo_descuento3 As String = "0"
         ' CUANTO DEL TOTAL DEL DOCUMENTO VA A SER EXENTO
@@ -3466,15 +3762,15 @@ Public Class Pos
 
 
 
-        Dim objDocumentoPago As New DocumentoPago(DocumentoPago_pos, DocumentoPago_empresa, DocumentoPago_cliente, DocumentoPago_fcreacion, DocumentoPago_hcreacion, DocumentoPago_motivo, DocumentoPago_monto, DocumentoPago_caja, DocumentoPago_Sede, DocumentoPago_usuario, DocumentoPago_Ultlineavoucher, DocumentoPago_Ultlineapresupuesto, DocumentoModalidad_Indicador)
+        Dim objDocumentoPago As New DocumentoPagox(DocumentoPago_pos, DocumentoPago_empresa, DocumentoPago_cliente, DocumentoPago_fcreacion, DocumentoPago_hcreacion, DocumentoPago_motivo, DocumentoPago_monto, DocumentoPago_caja, DocumentoPago_Sede, DocumentoPago_usuario, DocumentoPago_Ultlineavoucher, DocumentoPago_Ultlineapresupuesto, DocumentoModalidad_Indicador)
 
 
 
         Dim cargo_doc_timbrado As String = objDocumentoVenta.GrabaDocumento("aa", Date.Now)
-        Dim objDocumentoPago_Cargo As New DocumentoPagoCargo(cargo_documento, cargo_timbrado, cargo_moneda, cargo_cambio, cargo_saldo, cargo_abono, cargo_cambioAbono, cargo_vencto, _
-        cargo_cuenta, cargo_lista_precio, cargo_contacto, cargo_vendedor, cargo_cgestion_vendedor, cargo_direccion_despacho, cargo_fono, cargo_direccion_facturacion, _
-        cargo_nula, cargo_observaciones, cargo_lineas_articulo, cargo_ultima_guia, cargo_lineas_glosa, cargo_lineas_Contable, _
-        cargo_lineas_Condicion, cargo_descuento1, cargo_descuento2, cargo_descuento3, cargo_monto_exento, cargo_monto_iva, cargo_indicador_tipo, _
+        Dim objDocumentoPago_Cargo As New DocumentoPagoCargo(cargo_documento, cargo_timbrado, cargo_moneda, cargo_cambio, cargo_saldo, cargo_abono, cargo_cambioAbono, cargo_vencto,
+        cargo_cuenta, cargo_lista_precio, cargo_contacto, cargo_vendedor, cargo_cgestion_vendedor, cargo_direccion_despacho, cargo_fono, cargo_direccion_facturacion,
+        cargo_nula, cargo_observaciones, cargo_lineas_articulo, cargo_ultima_guia, cargo_lineas_glosa, cargo_lineas_Contable,
+        cargo_lineas_Condicion, cargo_descuento1, cargo_descuento2, cargo_descuento3, cargo_monto_exento, cargo_monto_iva, cargo_indicador_tipo,
         cargo_bodega, cargo_punto, cargo_saldo_documento, cargo_indicador_impresion, cargo_monto_credito, cargo_indicador_servip, cargo_indicador_movpendientes _
         , cargo_Folio_reparto, cargo_concepto_venta, cargo_tipo_transporte, cargo_termino, cargo_paridad_lista, cargo_ultlineapresupuesto, cargo_sucursal, cargo_glosa_facturacion)
 
@@ -3488,8 +3784,8 @@ Public Class Pos
                 objar.PorcentajeDescuento = Convert.ToDouble(Me.txtPorcentajeDescuento.Text.Replace(".", ","))
             End If
 
-            Dim objDocumentoPago_detalle_cargo As New DocumentoPago_detalle_cargo(contador, objar.sku, objar.cantidad, objar.precio.Replace(".", "") _
-              , "", objar.Envase, objar.precio.Replace(".", ""), "1", "0" _
+            Dim objDocumentoPago_detalle_cargo As New DocumentoPago_detalle_cargo(contador, objar.sku, objar.cantidad, objar.CNeto _
+              , "", objar.Envase, objar.CNeto, "1", "0" _
                   , objar.PorcentajeDescuento, 0, 0, objar.unidadmedida, _Ubicacion)
             arregloDocumentoPagoDetalle_Cargo.Add(objDocumentoPago_detalle_cargo)
         Next
@@ -3579,12 +3875,23 @@ Public Class Pos
                 Dim docxml As New XmlDocument
                 docxml.LoadXml(doc.ToString().Trim())
 
+                 Dim documentoxml = ""
+
+                If AprobacionDeposito = True Then
+                    docxml.Save(_RutaRespaldoXml + objventa.Correlativo + "_DEPO.xml")
+                    documentoxml = _RutaRespaldoXml + objventa.Correlativo + "_DEPO.xml"
+                    Else 
+                    docxml.Save(_RutaRespaldoXml + objventa.Correlativo + ".xml")
+                    documentoxml = _RutaRespaldoXml + objventa.Correlativo + ".xml"
+
+                End If
+
                 'docxml.LoadXml(prueba)
-                docxml.Save(_RutaRespaldoXml + objventa.Correlativo + ".xml")
+                
 
                 'docxml.Save("d:\" + 111 + ".xml")
 
-                Dim documentoxml = _RutaRespaldoXml + objventa.Correlativo + ".xml"
+                'Dim documentoxml = _RutaRespaldoXml + objventa.Correlativo + ".xml"
 
                 If _esVentaRecuperada = False Then
                     EjecutaVentaRespaldo(objventa, 2)
@@ -3649,6 +3956,215 @@ Public Class Pos
 
         Return valorRetorno
     End Function
+#End Region
+
+#Region "EjecutaventaMulti"
+    Public Function EjecutaventaMulti(ByVal objventa As VentaObj) As Boolean
+        Dim valorRetorno As Boolean = True
+        concepto = _Concepto
+
+        'detalle de los articulos solicitados.
+        Dim objarticulos As ArrayList = objventa.ListaArticulos
+
+        Dim tmf = CalculaTotalesMultifactura(objarticulos)
+
+
+
+        Dim infoDocumentoPago As New DocumentoPago
+        infoDocumentoPago.DocumentoPago_pos = objventa.codigo_Post
+        infoDocumentoPago.DocumentoPago_empresa = objventa.Codigo_Empresa
+        infoDocumentoPago.DocumentoPago_cliente = objventa.Cod_Cliente
+        infoDocumentoPago.DocumentoPago_fcreacion = objventa.FechaSistema
+        infoDocumentoPago.DocumentoPago_hcreacion = objventa.HoraSistema
+        infoDocumentoPago.DocumentoPago_motivo = "TRASPASO POS"
+        infoDocumentoPago.DocumentoPago_monto = objventa.total
+        infoDocumentoPago.DocumentoPago_caja = objventa.CajaRecepcion
+        infoDocumentoPago.DocumentoPago_sede = objventa.Sede
+        infoDocumentoPago.DocumentoPago_usuario = id_Cajero.ToString
+        infoDocumentoPago.DocumentoPago_Ultlineavoucher = "0"
+        infoDocumentoPago.DocumentoPago_Ultlineapresupuesto = "0"
+        infoDocumentoPago.DocumentoModalidad_Indicador = DetectaModalidad()
+
+        Dim infoVtaCargo As New List(Of VtaCargo)
+        Dim infoVtaPago As New List(Of VtaPago)
+
+
+        Dim infoPagos = GetDocumentosPagoAbono()
+        For Each o As DocumentoPago_abono In infoPagos
+            infoVtaPago.Add(New VtaPago() With {
+                    .Abono_documento = o.Abono_documento,
+                    .Abono_folio = o.Abono_folio,
+                    .Abono_moneda = o.Abono_moneda,
+                    .Abono_cambio = o.Abono_cambio,
+                    .Abono_banco = o.Abono_banco,
+                    .Abono_cuenta = o.Abono_codigo,
+                    .Abono_valor = o.Abono_valor,
+                    .Abono_emision = o.Abono_emision,
+                    .Abono_vencto = o.Abono_vencto,
+                    .Abono_autorizador = o.Abono_autorizador,
+                    .Abono_codigo = o.Abono_codigo,
+                    .Abono_tipo = o.Abono_tipo,
+                    .Abono_referencia = o.Abono_referencia,
+                    .Abono_terminal = o.Abono_terminal,
+                    .Abono_observacion = o.Abono_observacion,
+                    .Abono_lote = o.Abono_lote,
+                    .Abono_punto = o.Abono_punto
+                   })
+
+        Next
+
+
+
+        Dim nlineas = _NumeroLineas
+
+
+
+        Dim inicio = 0
+        Dim fin = nlineas
+        If fin > objarticulos.Count() Then
+            fin = objarticulos.Count()
+        End If
+
+        For i As Integer = 0 To Helper.MultiFacturaCantidad - 1
+            Dim infoVtaCargoDet As New List(Of VtaCargoDet)
+            Dim contador = 1
+            For j As Integer = inicio To fin - 1
+                Dim infoDetalle As ArticuloStringObj = objarticulos(j)
+                infoVtaCargoDet.Add(New VtaCargoDet() With {
+                   .Cargo_detalle_linea = contador,
+                   .Cargo_detalle_articulo = infoDetalle.sku,
+                   .Cargo_detalle_cantidad_uvta = infoDetalle.cantidad,
+                   .Cargo_detalle_precio_articulo = infoDetalle.precio.Replace(",", "").Replace(".",""),
+                   .Cargo_detalle_descto_linea = If(txtPorcentajeDescuento.Text <> "", txtPorcentajeDescuento.Text.Replace(",", "").Replace(".",""), String.Empty),
+                   .Cargo_detalle_indicador_envase = infoDetalle.Envase,
+                   .Cargo_detalle_precio_lista = infoDetalle.precio.Replace(",", "").Replace(".",""),
+                   .Cargo_detalle_paridad_documento = "1",
+                   .Cargo_detalle_tprecio_flete = "0",
+                   .Cargo_detalle_Pdescto_vol = "0",
+                   .Cargo_detalle_Pdescto_pago = "0",
+                   .Cargo_detalle_Pdescto_otros = "0",
+                   .Cargo_detalle_UM = infoDetalle.unidadmedida,
+                   .Cargo_detalle_ubicacion = _Ubicacion
+                   })
+                contador = contador + 1
+            Next
+            inicio = inicio + nlineas
+            fin = fin + nlineas
+            If fin > objarticulos.Count() Then
+                fin = objarticulos.Count()
+            End If
+
+            dim total =  Convert.ToDouble(tmf(i)).ToString("N0").Replace(",", "").Replace(".","")
+            Dim neto =  Convert.ToDouble(tmf(i) / 1.19)
+            Dim iva = Convert.ToDouble(tmf(i) - neto).ToString("N0").Replace(",", "").Replace(".","")
+            
+
+            infoVtaCargo.Add(New VtaCargo() With {
+                    .Cargo_documento = objventa.DocumentoVenta,
+                    .Cargo_timbrado = Helper.MultifacturaArray(i),
+                    .Cargo_moneda = objventa.Moneda,
+                    .Cargo_cambio = "1", 'valor defecto
+                    .Cargo_saldo = total, 'objventa.total
+                    .Cargo_abono = total, 'objventa.total
+                    .Cargo_cambioabono = "1", 'valor defecto segun browse 
+                    .Cargo_vencto = _FechaBrowse(objventa.FechaVencimiento),
+                    .Cargo_cuenta = "0", 'a la espera de preguntar si puede ir en null
+                    .Cargo_lista_precio = objventa.Lista,
+                    .Cargo_vendedor = objventa.CodigoVendedor, 'codigo vendedor
+                    .Cargo_cgestion_vendedor = objventa.CentrodeGestion,
+                    .Cargo_direccion_despacho = objventa.DireccionDespacho,
+                    .Cargo_fono = objventa.FonoCliente,
+                    .Cargo_direccion_facturacion = objventa.DireccionFacturacion,
+                    .Cargo_nula = "N", 'valor defecto proporcionado por browse. del cual nos tenemos que detallar junto a ellos
+                    .Cargo_observaciones = "OBSERVACIONES",
+                    .Cargo_lineas_articulo = contador, 'objventa.ListaArticulos.Count.ToString   'total de articulos en detalle
+                    .Cargo_ultima_guia = "0", 'se inngresa el nro de la ultima guia de despacho de lo contrario se ingresa 0
+                    .Cargo_lineas_glosa = "0",
+                    .Cargo_lineas_contable = contador, 'objventa.ListaArticulos.Count.ToString
+                    .Cargo_lineas_condicion = contador, 'objventa.ListaArticulos.Count.ToString
+                    .Cargo_descuento1 = objventa.PorcentajeDescuento,
+                    .Cargo_descuento2 = "0",
+                    .Cargo_descuento3 = "0",
+                    .Cargo_monto_exento = String.Empty,
+                    .Cargo_monto_iva = iva, 'objventa.iva
+                    .Cargo_indicador_tipo = "I",
+                    .Cargo_bodega = _Bodega,
+                    .Cargo_punto = objventa.PuntoFacturacion,
+                    .Cargo_saldo_documento = total, 'objventa.total
+                    .Cargo_indicador_impresion = "S",
+                    .Cargo_monto_credito = "0",
+                    .Cargo_indicador_servip = String.Empty,
+                    .Cargo_indicador_movpendientes = "N",
+                    .Cargo_folio_reparto = String.Empty,
+                    .Cargo_concepto_venta = ConceptoVenta,
+                    .Cargo_tipo_transporte = "99",
+                    .Cargo_termino = GetTerminoPago(),
+                    .Cargo_paridad_lista = String.Empty,
+                    .Cargo_ultlinea_presupuesto = "0",
+                    .Cargo_glosa_facturacion = String.Empty,
+                    .DocumentoPago_detalle_cargo = infoVtaCargoDet
+                    })
+
+        Next
+
+
+
+
+
+        infoDocumentoPago.DocumentoPago_cargo = infoVtaCargo
+        infoDocumentoPago.DocumentoPago_abono = infoVtaPago
+
+
+        Dim valorStandAlone = _GetDatoFtp("POS" + txtNroCaja.Text + "_STANDALONE")
+
+        If valorStandAlone = "1" Then 'ENVIA XML A SERVIDOR POR FTP PARA QUE SE EJECUTE CON DEMONIO
+
+            Dim Folios = String.Join("_", Helper.MultifacturaArray)
+
+            Dim serializer = New XmlSerializer(infoDocumentoPago.GetType())
+            Dim ns = new XmlSerializerNamespaces() 
+            ns.Add("", "")
+
+            Dim settings = new XmlWriterSettings()
+            settings.OmitXmlDeclaration = true
+
+              
+            
+
+            Dim documentoxml = ""
+
+            If AprobacionDeposito = True Then
+                     documentoxml = _RutaRespaldoXml + Folios + "_DEPO.xml"
+                Else 
+                     documentoxml = _RutaRespaldoXml + Folios + ".xml"
+
+            End If
+           
+
+
+            
+
+            Using writer As New StreamWriter(documentoxml)
+                serializer.Serialize(writer, infoDocumentoPago,ns)
+            End Using
+
+
+            If _esVentaRecuperada = False Then
+                EjecutaVentaRespaldo(objventa, 2)
+            End If
+
+            'valorRetorno = FtpClient.UploadFileFtp("POS" + txtNroCaja.Text, documentoxml, Folios + ".xml")
+
+        End If
+
+
+
+
+
+
+        Return valorRetorno
+    End Function
+#End Region
 
 
     Public Function Ejecutaventasinpago(ByVal objventa As VentaObj) As Boolean
@@ -3821,13 +4337,13 @@ Public Class Pos
 
 
 
-        Dim objDocumentoPago As New DocumentoPago(DocumentoPago_pos, DocumentoPago_empresa, DocumentoPago_cliente, DocumentoPago_fcreacion, DocumentoPago_hcreacion, DocumentoPago_motivo, DocumentoPago_monto, DocumentoPago_caja, DocumentoPago_Sede, DocumentoPago_usuario, DocumentoPago_Ultlineavoucher, DocumentoPago_Ultlineapresupuesto, DocumentoModalidad_Indicador)
+        Dim objDocumentoPago As New DocumentoPagox(DocumentoPago_pos, DocumentoPago_empresa, DocumentoPago_cliente, DocumentoPago_fcreacion, DocumentoPago_hcreacion, DocumentoPago_motivo, DocumentoPago_monto, DocumentoPago_caja, DocumentoPago_Sede, DocumentoPago_usuario, DocumentoPago_Ultlineavoucher, DocumentoPago_Ultlineapresupuesto, DocumentoModalidad_Indicador)
 
         Dim cargo_doc_timbrado As String = objDocumentoVenta.GrabaDocumento("aa", Date.Now)
-        Dim objDocumentoPago_Cargo As New DocumentoPagoCargo(cargo_documento, cargo_timbrado, cargo_moneda, cargo_cambio, cargo_saldo, cargo_abono, cargo_cambioAbono, cargo_vencto, _
-        cargo_cuenta, cargo_lista_precio, cargo_contacto, cargo_vendedor, cargo_cgestion_vendedor, cargo_direccion_despacho, cargo_fono, cargo_direccion_facturacion, _
-        cargo_nula, cargo_observaciones, cargo_lineas_articulo, cargo_ultima_guia, cargo_lineas_glosa, cargo_lineas_Contable, _
-        cargo_lineas_Condicion, cargo_descuento2, cargo_descuento2, cargo_descuento3, cargo_monto_exento, cargo_monto_iva, cargo_indicador_tipo, _
+        Dim objDocumentoPago_Cargo As New DocumentoPagoCargo(cargo_documento, cargo_timbrado, cargo_moneda, cargo_cambio, cargo_saldo, cargo_abono, cargo_cambioAbono, cargo_vencto,
+        cargo_cuenta, cargo_lista_precio, cargo_contacto, cargo_vendedor, cargo_cgestion_vendedor, cargo_direccion_despacho, cargo_fono, cargo_direccion_facturacion,
+        cargo_nula, cargo_observaciones, cargo_lineas_articulo, cargo_ultima_guia, cargo_lineas_glosa, cargo_lineas_Contable,
+        cargo_lineas_Condicion, cargo_descuento2, cargo_descuento2, cargo_descuento3, cargo_monto_exento, cargo_monto_iva, cargo_indicador_tipo,
         cargo_bodega, cargo_punto, cargo_saldo_documento, cargo_indicador_impresion, cargo_monto_credito, cargo_indicador_servip, cargo_indicador_movpendientes _
         , cargo_Folio_reparto, cargo_concepto_venta, cargo_tipo_transporte, cargo_termino, cargo_paridad_lista, cargo_ultlineapresupuesto, cargo_sucursal, cargo_glosa_facturacion)
 
@@ -4080,13 +4596,13 @@ Public Class Pos
 
 
 
-        Dim objDocumentoPago As New DocumentoPago(DocumentoPago_pos, DocumentoPago_empresa, DocumentoPago_cliente, DocumentoPago_fcreacion, DocumentoPago_hcreacion, DocumentoPago_motivo, DocumentoPago_monto, DocumentoPago_caja, DocumentoPago_Sede, DocumentoPago_usuario, DocumentoPago_Ultlineavoucher, DocumentoPago_Ultlineapresupuesto, DocumentoModalidad_Indicador)
+        Dim objDocumentoPago As New DocumentoPagox(DocumentoPago_pos, DocumentoPago_empresa, DocumentoPago_cliente, DocumentoPago_fcreacion, DocumentoPago_hcreacion, DocumentoPago_motivo, DocumentoPago_monto, DocumentoPago_caja, DocumentoPago_Sede, DocumentoPago_usuario, DocumentoPago_Ultlineavoucher, DocumentoPago_Ultlineapresupuesto, DocumentoModalidad_Indicador)
 
         Dim cargo_doc_timbrado As String = objDocumentoVenta.GrabaDocumento("aa", Date.Now)
-        Dim objDocumentoPago_Cargo As New DocumentoPagoCargo(cargo_documento, cargo_timbrado, cargo_moneda, cargo_cambio, cargo_saldo, cargo_abono, cargo_cambioAbono, cargo_vencto, _
-        cargo_cuenta, cargo_lista_precio, cargo_contacto, cargo_vendedor, cargo_cgestion_vendedor, cargo_direccion_despacho, cargo_fono, cargo_direccion_facturacion, _
-        cargo_nula, cargo_observaciones, cargo_lineas_articulo, cargo_ultima_guia, cargo_lineas_glosa, cargo_lineas_Contable, _
-        cargo_lineas_Condicion, cargo_descuento2, cargo_descuento2, cargo_descuento3, cargo_monto_exento, cargo_monto_iva, cargo_indicador_tipo, _
+        Dim objDocumentoPago_Cargo As New DocumentoPagoCargo(cargo_documento, cargo_timbrado, cargo_moneda, cargo_cambio, cargo_saldo, cargo_abono, cargo_cambioAbono, cargo_vencto,
+        cargo_cuenta, cargo_lista_precio, cargo_contacto, cargo_vendedor, cargo_cgestion_vendedor, cargo_direccion_despacho, cargo_fono, cargo_direccion_facturacion,
+        cargo_nula, cargo_observaciones, cargo_lineas_articulo, cargo_ultima_guia, cargo_lineas_glosa, cargo_lineas_Contable,
+        cargo_lineas_Condicion, cargo_descuento2, cargo_descuento2, cargo_descuento3, cargo_monto_exento, cargo_monto_iva, cargo_indicador_tipo,
         cargo_bodega, cargo_punto, cargo_saldo_documento, cargo_indicador_impresion, cargo_monto_credito, cargo_indicador_servip, cargo_indicador_movpendientes _
         , cargo_Folio_reparto, cargo_concepto_venta, cargo_tipo_transporte, cargo_termino, cargo_paridad_lista, cargo_ultlineapresupuesto, cargo_sucursal, cargo_glosa_facturacion)
 
@@ -4179,30 +4695,32 @@ Public Class Pos
     Public Sub GUARDARVENTA(ByVal razon As String) Handles xRazon.GetRazon
 
 
-        Dim docu As String = "<Documento>" & _
-        "<Correlativo>" + txtCorrelativo.Text + "</Correlativo>" & _
-        "<Cliente>" + txtRut.Text + "</Cliente>" & _
-        "<ListaPrecio>" + txtListaPrecio.Text + "</ListaPrecio>" & _
-        "<RazonSocial>" + txtNombreCliente.Text + "</RazonSocial>" & _
-        "<CodigoVendedor>" + txtCodigoVendedor.Text + "</CodigoVendedor>" & _
-        "<NombreVendedor>" + txtNombreVendedor.Text + "</NombreVendedor>" & _
-        "<IdDireccion>" + txtCodigoDirección.Text + "</IdDireccion>" & _
-        "<Direccion>" + txtNombreDireccion.Text + "</Direccion>" & _
-        "<Descuento>" + txtDescuento.Text + "</Descuento>" & _
-        "<TipoDocumento>" + TipoDocumentoVenta() + "</TipoDocumento>" & _
-        "<DescuentoCabesera>" + txtPorcentajeDescuento.Text + "</DescuentoCabesera>" & _
-        "<Detalle>" & _
-        retornaDetalleArticulos() & _
-        "</Detalle>" & _
+        Dim docu As String = "<Documento>" &
+        "<Correlativo>" + txtCorrelativo.Text + "</Correlativo>" &
+        "<Cliente>" + txtRut.Text + "</Cliente>" &
+        "<ListaPrecio>" + txtListaPrecio.Text + "</ListaPrecio>" &
+        "<RazonSocial>" + txtNombreCliente.Text + "</RazonSocial>" &
+        "<CodigoVendedor>" + txtCodigoVendedor.Text + "</CodigoVendedor>" &
+        "<NombreVendedor>" + txtNombreVendedor.Text + "</NombreVendedor>" &
+        "<IdDireccion>" + txtCodigoDirección.Text + "</IdDireccion>" &
+        "<Direccion>" + txtNombreDireccion.Text + "</Direccion>" &
+        "<Descuento>" + txtDescuento.Text + "</Descuento>" &
+        "<TipoDocumento>" + TipoDocumentoVenta() + "</TipoDocumento>" &
+        "<DescuentoCabesera>" + txtPorcentajeDescuento.Text.Replace(",", ".") + "</DescuentoCabesera>" &
+        "<Detalle>" &
+        retornaDetalleArticulos() &
+        "</Detalle>" &
         "</Documento>"
 
+           
+        Dim fecha = DateTime.Now.ToString("yyyyMMddHHss")
 
-        ' Dim docxml As New XmlDocument
-        'docxml.LoadXml(docu)
-        'Dim ruta As String = _RutaDocumentosPendientes + txtCorrelativo.Text + ".xml" '
-        ' docxml.Save(ruta)
+        Dim docxml As New XmlDocument
+        docxml.LoadXml(docu)
+        Dim ruta As String = _RutaRespaldoXml + "PENDIENTE_" + fecha + "_" + txtCorrelativo.Text + ".xml"
+        docxml.Save(ruta)
 
-        WS_POS.POS_Documento("SAVE", _FechaSistemaWin, txtCorrelativo.Text + ".XML", 1, razon, TipoDocumentoVenta, docu, 0, _Sede, _PuntoFacturacion)
+        WS_POS.POS_Documento("SAVE", _FechaSistemaWin, "PENDIENTE_" + fecha + "_" + txtCorrelativo.Text + ".xml", 1, razon, TipoDocumentoVenta, docu, 0, _Sede, _PuntoFacturacion)
 
     End Sub
 
@@ -4223,13 +4741,13 @@ Public Class Pos
                 descuentodetalle = Int32.Parse(gr.Cells("Porcentaje").Value)
             End If
 
-            tag = tag & _
-            "<Articulo>" & _
-            "<ArticuloCodigo>" + gr.Cells("Codigo").Value.ToString + "</ArticuloCodigo>" & _
-            "<ArticuloCantidad>" + gr.Cells("Cant").Value.ToString + "</ArticuloCantidad>" & _
-            "<ArticuloDescuento>" + descuentodetalle.ToString + "</ArticuloDescuento>" & _
-            "<ArticuloPrecioNeto>" + gr.Cells("Precio").Value.ToString + "</ArticuloPrecioNeto>" & _
-            "<ArticuloPrecioIva>" + gr.Cells("PrecioIva").Value.ToString + "</ArticuloPrecioIva>" & _
+            tag = tag &
+            "<Articulo>" &
+            "<ArticuloCodigo>" + gr.Cells("Codigo").Value.ToString + "</ArticuloCodigo>" &
+            "<ArticuloCantidad>" + gr.Cells("Cant").Value.ToString + "</ArticuloCantidad>" &
+            "<ArticuloDescuento>" + descuentodetalle.ToString + "</ArticuloDescuento>" &
+            "<ArticuloPrecioNeto>" + gr.Cells("Precio").Value.ToString + "</ArticuloPrecioNeto>" &
+            "<ArticuloPrecioIva>" + gr.Cells("PrecioIva").Value.ToString + "</ArticuloPrecioIva>" &
             "</Articulo>"
         Next
 
@@ -4353,6 +4871,11 @@ Public Class Pos
                 forma = forma + "TCRED"
             End If
 
+            If txtResumenDebitoCredito.Text <> "" Then
+                contador = contador + 1
+                forma = forma + "TCRED"
+            End If
+
             If txtResumenCheque.Text <> "" Then
                 contador = contador + 1
                 forma = forma + "CHEQUE "
@@ -4384,6 +4907,11 @@ Public Class Pos
             End If
 
             If txtResumenDebito.Text <> "" Then
+                contador = contador + 1
+                forma = forma + "DEBITO "
+            End If
+
+            If txtResumenDebitoCredito.Text <> "" Then
                 contador = contador + 1
                 forma = forma + "DEBITO "
             End If
@@ -4542,7 +5070,7 @@ Public Class Pos
         If txtResumenCreditoSteward.Text <> "" Then
 
             Dim objDocumentoPago_abono As New DocumentoPago_abono("CRED", "", _Moneda, _AbonoCambio, 0, "", txtResumenCreditoSteward.Text.Replace(".", ""), _FechaSistema, _FechaSistema _
-                                                                     , "", Me.txtCreditoRut.Text, 1, txtCredito_OrdendeCompra.Text, "", "", CreditoSteward_txt_Observacion.Text, _PuntoFacturacion)
+                                                                     , "", Me.txtCreditoRut.Text, 1, txtCredito_OrdendeCompra.Text, "", CreditoSteward_txt_Observacion.Text, "", _PuntoFacturacion)
             arr.Add(objDocumentoPago_abono)
 
         End If
@@ -6224,21 +6752,44 @@ Public Class Pos
 
         If txtResumenDebito.Text = "" And txtResumenDebito.ReadOnly = False Then
             txtResumenDebito.ReadOnly = True
+            debito_Banco.Text = ""
+            debito_txtNroOperacion.Text = ""
+            Debito_txt_Codigo_Autorizacion.Text = ""
             RemoverPaneles()
         End If
 
         If txtResumenCheque.Text = "" And txtResumenCheque.ReadOnly = False Then
             txtResumenCheque.ReadOnly = True
+            Cheque_txt_Cantidad.Text = ""
+            cheque_txt_rut.Text = ""
+            cheque_txt_nroCuenta.Text = ""
+            chequetxtCondicionPago.Text = ""
+            cheque_Banco.Text = ""
+            cheque_txt_condicionPago_Codigo.Text = ""
+            cheque_Banco_Codigo.Text = ""
+            cheque_grid_cheque.Rows.Clear()
+
             RemoverPaneles()
         End If
 
         If txtResumenCredito.Text = "" And txtResumenCredito.ReadOnly = False Then
             txtResumenCredito.ReadOnly = True
+            credito_txt_banco.Text = ""
+            credito_txt_tipotarjeta.Text = ""
+            credito_txt_nro_operacion.Text = ""
+            credito_txt_CodAutorizacion.Text = ""
+            txtCuotasCredito.Text = ""
+            txtCreditoTerminoPago.Text = ""
+
             RemoverPaneles()
         End If
 
         If txtResumenCreditoSteward.Text = "" And txtResumenCreditoSteward.ReadOnly = False Then
             txtResumenCreditoSteward.ReadOnly = True
+
+            txtCreditoRut.Text = ""
+            txtCredito_OrdendeCompra.Text = ""
+            CreditoSteward_txt_Observacion.Text = ""
             RemoverPaneles()
         End If
 
@@ -6346,6 +6897,11 @@ Public Class Pos
                 gr.Cells("Precio").Value = objArticulo.precio
                 Dim calculo As Integer = objArticulo.PrecioIva * Int32.Parse(gr.Cells("Cant").Value)
                 gr.Cells("valor").Value = calculo.ToString("N0")
+
+                gr.Cells("CBruto").Value = objArticulo.CBruto
+                gr.Cells("CNeto").Value = objArticulo.CNeto
+                gr.Cells("CIva").Value = objArticulo.CIva
+               
             Else
                 Select Case MsgBox(codigo & " | " & nombre & " por " & valor & vbCr & "No tiene lista de precio " & Me.txtListaPrecio.Text & vbCr & "Conservar producto y precio (Si)" & vbCr & "Eliminar Producto (No)", vbInformation Or vbYesNo, "Información")
                     Case vbYes
@@ -7927,5 +8483,149 @@ Public Class Pos
 
     Private Sub txtCorrelativo_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtCorrelativo.KeyPress
 
+    End Sub
+
+
+    Public Sub GeneraOferta(ByVal codigo As Boolean, ByVal nombre As String, ByVal rut As String, ByVal promo As String) Handles xPromocionTercera.GeneraOferta
+           If codigo = True
+                PromoNombre = promo + ">" + nombre + "|" + rut
+                Dim rutx As String = objTrans.LimpiaRut(txtRut.Text)
+                For Each gr As DataGridViewRow In gridDetalle.Rows
+                    Dim skux = gr.Cells("Codigo").Value
+                    Dim cntx = Convert.ToDouble(gr.Cells("Cant").Value)
+                    Dim articulo As ArticuloObj = objArticuloController.GetArticuloCodigo(Int32.Parse(rutx), skux, txtListaPrecio.Text, "S")
+                    gr.Cells("PrecioIva").Value = articulo.PrecioIva.ToString("N0")
+                    gr.Cells("Valor").Value = (articulo.PrecioIva * cntx).ToString("N0")
+
+                    gr.Cells("CBruto").Value = articulo.CBruto
+                    gr.Cells("CNeto").Value = articulo.CNeto
+                    gr.Cells("CIva").Value = articulo.CIva
+                    If articulo.Oferta = 1 Then
+                        gr.DefaultCellStyle.BackColor = Color.GreenYellow
+                    End If
+                Next
+
+                CalculaSubTotal()
+                DestacaProductoEnOferta()
+                APlicaColoresGrillaDetalle()
+                AplicaDestacadoProducto()
+            Else 
+            chkOferta.Checked = False
+           End If
+    End Sub
+
+    Private Sub chkOferta_CheckStateChanged(sender As Object, e As EventArgs) Handles chkOferta.CheckStateChanged
+        Dim rut As String = objTrans.LimpiaRut(txtRut.Text)
+        If chkOferta.Checked = True Then
+            If gridDetalle.RowCount > 0 Then
+
+                xPromocionTercera.ShowDialog()
+                
+            End If
+        ElseIf chkOferta.Checked = False
+            If gridDetalle.RowCount > 0 Then
+                For Each gr As DataGridViewRow In gridDetalle.Rows
+                    Dim skux = gr.Cells("Codigo").Value
+                    Dim cntx = Convert.ToDouble(gr.Cells("Cant").Value)
+                    Dim articulo As ArticuloObj = objArticuloController.GetArticuloCodigo(Int32.Parse(rut), skux, txtListaPrecio.Text, "N")
+                    gr.Cells("PrecioIva").Value = articulo.PrecioIva.ToString("N0")
+                    gr.Cells("Valor").Value = (articulo.PrecioIva * cntx).ToString("N0")
+                    gr.Cells("CBruto").Value = articulo.CBruto
+                    gr.Cells("CNeto").Value = articulo.CNeto
+                    gr.Cells("CIva").Value = articulo.CIva
+                    gr.DefaultCellStyle.BackColor = Color.White
+
+                Next
+                CalculaSubTotal()
+                DestacaProductoEnOferta()
+                APlicaColoresGrillaDetalle()
+                AplicaDestacadoProducto()
+            End If
+
+
+        End If
+
+    End Sub
+
+    Private Sub gridDetalle_Click_1(sender As Object, e As EventArgs) Handles gridDetalle.Click
+
+    End Sub
+
+    Private Sub gridDetalle_MouseClick(sender As Object, e As MouseEventArgs) Handles gridDetalle.MouseClick
+        'If Me.gridDetalle.Rows.Count <> 0 Then
+        '    Dim fila As Integer = gridDetalle.CurrentRow.Index
+        '    gridDetalle.ClearSelection()
+        '    gridDetalle.CurrentCell = gridDetalle.Rows(fila).Cells("Cant")
+        'End If
+    End Sub
+
+    Private Sub TabCabeceraPrincipal_Click(sender As Object, e As EventArgs) Handles TabCabeceraPrincipal.Click
+
+    End Sub
+
+    Private Sub Button3_Click(sender As Object, e As EventArgs) 
+        LibTbk.Configura(_PuertoTbk)
+
+        Dim respuesta = LibTbk.GeneraVentasPos(Comprobante.Si, 15200, 111450,5)
+    End Sub
+
+    Private Sub btnDebitoCredito_Click(sender As Object, e As EventArgs) Handles btnDebitoCredito.Click
+        VuelveModalidadN()
+        accionBotonCompraDebitoCredito()
+    End Sub
+
+    Private Sub checkTBK_CheckedChanged(sender As Object, e As EventArgs) Handles checkTBK.CheckedChanged
+        TransbankCheck(checkTBK.CheckState)
+    End Sub
+
+    Private Sub Button3_Click_1(sender As Object, e As EventArgs) Handles Button3.Click
+
+        Dim valoracobrar = txtResumenDebito.Text.Replace(".","")
+        dim ncuotas = tbkCuotas.Text
+        Dim folio = Int32.Parse(txtCorrelativo.Text.Replace(".",""))
+
+        LibTbk.Configura(_PuertoTbk)
+
+         Dim respuestaTbk = LibTbk.GeneraVentasPos(Comprobante.Si, valoracobrar, folio, ncuotas)
+        If respuestaTbk.Conexion = True
+            If  respuestaTbk.DatosVenta.Codigo.Equals("00")
+                tbkTarjeta.Text = respuestaTbk.DatosVenta.NombreTarjeta
+                tbkOperacion.Text = respuestaTbk.DatosVenta.NOperacion
+                tbkAutorizacion.Text = respuestaTbk.DatosVenta.CAutorizacion
+                Button4.Enabled = True
+                Else 
+                MessageBox.Show(respuestaTbk.DatosVenta.CodigoDescripcion)
+            End If  
+            Else 
+            MessageBox.Show(respuestaTbk.ConexionDescripcion)
+        End If 
+
+    End Sub
+
+    Private Sub Button4_Click_1(sender As Object, e As EventArgs) Handles Button4.Click
+        LibTbk.Configura(_PuertoTbk)
+
+        Dim respuestaTbk = LibTbk.AnulaVentaPos(debito_txtNroOperacion.Text)
+        If respuestaTbk.Conexion = True
+            If  respuestaTbk.DatosAnulacion.Codigo.Equals("00")
+                MessageBox.Show("Anulacion venta")
+                tbkTarjeta.Text = ""
+                tbkOperacion.Text = ""
+                tbkAutorizacion.Text = ""
+                Else 
+                MessageBox.Show(respuestaTbk.DatosAnulacion.CodigoDescripcion)
+            End If  
+            Else 
+            MessageBox.Show(respuestaTbk.ConexionDescripcion)
+        End If
+    End Sub
+
+    Private Sub Button6_Click_1(sender As Object, e As EventArgs) Handles Button6.Click
+          Xautorizacion.Tipo.Text = "Transbank"
+            Xautorizacion.txtUsuario.Focus()
+            Xautorizacion.ShowDialog()
+            Exit Sub
+
+        xTBK.ShowDialog()
     End Sub
 End Class

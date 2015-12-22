@@ -12,7 +12,7 @@
     <AssemblyName>Pos2</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <OptionExplicit>On</OptionExplicit>
     <OptionCompare>Binary</OptionCompare>
     <OptionStrict>Off</OptionStrict>
@@ -45,6 +45,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -67,6 +68,9 @@
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022,42353,42354,42355</NoWarn>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>POS-cash-register-icon-1106172133.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ChilkatDotNet2">
       <HintPath>..\..\..\..\Aplicaciones\ChilKat\x86\ChilkatDotNet2-9.5.0-win32\ChilkatDotNet2-9.5.0-win32\ChilkatDotNet2.dll</HintPath>
@@ -87,6 +91,7 @@
     <Reference Include="System.ServiceModel">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -95,6 +100,9 @@
     </Reference>
     <Reference Include="System.Data.DataSetExtensions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="TbkLibSTW">
+      <HintPath>..\..\..\TransBank\TbkLibSTW\bin\Debug\TbkLibSTW.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +167,11 @@
     <Compile Include="Code\Controller\VendedorController.vb" />
     <Compile Include="Code\Controller\VentaController.vb" />
     <Compile Include="Code\FtpClient.vb" />
+    <Compile Include="Code\Helper.vb" />
+    <Compile Include="Code\NewModel\DocumentoPago.vb" />
+    <Compile Include="Code\NewModel\VtaCargo.vb" />
+    <Compile Include="Code\NewModel\VtaCargoDet.vb" />
+    <Compile Include="Code\NewModel\VtaPago.vb" />
     <Compile Include="Code\Obj\ArticuloObj.vb" />
     <Compile Include="Code\Obj\ChequeObj.vb" />
     <Compile Include="Code\Obj\ArticuloStringObj.vb" />
@@ -186,6 +199,7 @@
     <Compile Include="Code\Obj\PerfilClienteObj.vb" />
     <Compile Include="Code\Obj\SedeObj.vb" />
     <Compile Include="Code\Obj\TipoVentasObj.vb" />
+    <Compile Include="Code\Obj\Totales.vb" />
     <Compile Include="Code\Obj\UsuarioObj.vb" />
     <Compile Include="Code\Obj\VendedorObj.vb" />
     <Compile Include="Code\Obj\VentaObj.vb" />
@@ -195,6 +209,18 @@
       <DependentUpon>direccionFacturacion.vb</DependentUpon>
     </Compile>
     <Compile Include="direccionFacturacion.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmTrans.Designer.vb">
+      <DependentUpon>frmTrans.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmTrans.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Promocion.Designer.vb">
+      <DependentUpon>Promocion.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Promocion.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormAutorizacion.Designer.vb">
@@ -650,6 +676,9 @@
     <EmbeddedResource Include="FrmReporte.resx">
       <DependentUpon>FrmReporte.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmTrans.resx">
+      <DependentUpon>frmTrans.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Help.resx">
       <DependentUpon>Help.vb</DependentUpon>
     </EmbeddedResource>
@@ -682,6 +711,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Productos.resx">
       <DependentUpon>Productos.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Promocion.resx">
+      <DependentUpon>Promocion.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="pruebas.resx">
       <DependentUpon>pruebas.vb</DependentUpon>
@@ -1359,6 +1391,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="POS-cash-register-icon-1106172133.ico" />
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
@@ -1542,10 +1575,6 @@
     <ProjectReference Include="..\..\StewardLib\StewardLib.vbproj">
       <Project>{11C5E8F2-D001-4B1F-A024-2F02F050BF22}</Project>
       <Name>StewardLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GeneraTXT\GeneraTXT.csproj">
-      <Project>{2b6373a5-3486-4438-a4ed-0719e95e09ad}</Project>
-      <Name>GeneraTXT</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

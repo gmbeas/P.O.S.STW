@@ -173,7 +173,7 @@ Public Class VentaXML
 
         Return xmldoc
     End Function
-    Public Function DocumentoPagoGetXMLold2(ByVal dp As DocumentoPago, ByVal dpc As DocumentoPagoCargo, ByVal dpcd As DocumentoPago_detalle_cargo, ByVal dpdvc As DocumentoPago_detvarios_cargo, ByVal Dpic As DocumentoPago_impuesto_cargo, ByVal dpvc As DocumentoPago_voucher_cargo, ByVal dpcc As DocumentoPago_ppto_cargo, ByVal dpa As DocumentoPago_abono) As String
+    Public Function DocumentoPagoGetXMLold2(ByVal dp As DocumentoPagox, ByVal dpc As DocumentoPagoCargo, ByVal dpcd As DocumentoPago_detalle_cargo, ByVal dpdvc As DocumentoPago_detvarios_cargo, ByVal Dpic As DocumentoPago_impuesto_cargo, ByVal dpvc As DocumentoPago_voucher_cargo, ByVal dpcc As DocumentoPago_ppto_cargo, ByVal dpa As DocumentoPago_abono) As String
 
 
         Dim xmldoc As String = "<?xml version='1.0' encoding='utf-8'?>" & _
@@ -311,7 +311,7 @@ Public Class VentaXML
         Return xmldoc
     End Function
 
-    Public Function DocumentoPagoGetXML(ByVal dp As DocumentoPago, ByVal dpc As DocumentoPagoCargo, ByVal dpcd As ArrayList, ByVal dpdvc As DocumentoPago_detvarios_cargo, ByVal Dpic As DocumentoPago_impuesto_cargo, ByVal dpvc As DocumentoPago_voucher_cargo, ByVal dpcc As DocumentoPago_ppto_cargo, ByVal dpaarr As ArrayList, ByVal Modalidad As String) As String
+    Public Function DocumentoPagoGetXML(ByVal dp As DocumentoPagox, ByVal dpc As DocumentoPagoCargo, ByVal dpcd As ArrayList, ByVal dpdvc As DocumentoPago_detvarios_cargo, ByVal Dpic As DocumentoPago_impuesto_cargo, ByVal dpvc As DocumentoPago_voucher_cargo, ByVal dpcc As DocumentoPago_ppto_cargo, ByVal dpaarr As ArrayList, ByVal Modalidad As String) As String
         Dim tagPago_detalle_cargo As String = ""
         Dim tag_condicion_cargo As String = ""
 
@@ -484,7 +484,7 @@ Public Class VentaXML
     End Function
 
 #Region "DocumentoPagoGetXMLRespaldo NO SE USA"
-    Public Function DocumentoPagoGetXMLRespaldo(ByVal dp As DocumentoPago, ByVal dpc As DocumentoPagoCargo, ByVal dpcd As ArrayList, ByVal dpdvc As DocumentoPago_detvarios_cargo, ByVal Dpic As DocumentoPago_impuesto_cargo, ByVal dpvc As DocumentoPago_voucher_cargo, ByVal dpcc As DocumentoPago_ppto_cargo, ByVal dpaarr As ArrayList, ByVal Modalidad As String) As String
+    Public Function DocumentoPagoGetXMLRespaldo(ByVal dp As DocumentoPagox, ByVal dpc As DocumentoPagoCargo, ByVal dpcd As ArrayList, ByVal dpdvc As DocumentoPago_detvarios_cargo, ByVal Dpic As DocumentoPago_impuesto_cargo, ByVal dpvc As DocumentoPago_voucher_cargo, ByVal dpcc As DocumentoPago_ppto_cargo, ByVal dpaarr As ArrayList, ByVal Modalidad As String) As String
 
         Dim tagPago_detalle_cargo As String = ""
         Dim tag_condicion_cargo As String = ""
@@ -617,7 +617,7 @@ Public Class VentaXML
     End Function
 #End Region
 
-    Public Function DocumentoPagoGetXMLAbonoAplica(ByVal dp As DocumentoPago, ByVal dpc As DocumentoPagoCargo, ByVal dpcd As ArrayList, ByVal dpdvc As DocumentoPago_detvarios_cargo, ByVal Dpic As DocumentoPago_impuesto_cargo, ByVal dpvc As DocumentoPago_voucher_cargo, ByVal dpcc As DocumentoPago_ppto_cargo, ByVal dpaarr As ArrayList) As String
+    Public Function DocumentoPagoGetXMLAbonoAplica(ByVal dp As DocumentoPagox, ByVal dpc As DocumentoPagoCargo, ByVal dpcd As ArrayList, ByVal dpdvc As DocumentoPago_detvarios_cargo, ByVal Dpic As DocumentoPago_impuesto_cargo, ByVal dpvc As DocumentoPago_voucher_cargo, ByVal dpcc As DocumentoPago_ppto_cargo, ByVal dpaarr As ArrayList) As String
 
 
         Dim tag_condicion_cargo As String = ""
@@ -681,7 +681,7 @@ Public Class VentaXML
 
         Return xmldoc
     End Function
-    Public Function DocumentoPagoGetXMLSinPago(ByVal dp As DocumentoPago, ByVal dpc As DocumentoPagoCargo, ByVal dpcd As ArrayList, ByVal dpdvc As DocumentoPago_detvarios_cargo, ByVal Dpic As DocumentoPago_impuesto_cargo, ByVal dpvc As DocumentoPago_voucher_cargo, ByVal dpcc As DocumentoPago_ppto_cargo) As String
+    Public Function DocumentoPagoGetXMLSinPago(ByVal dp As DocumentoPagox, ByVal dpc As DocumentoPagoCargo, ByVal dpcd As ArrayList, ByVal dpdvc As DocumentoPago_detvarios_cargo, ByVal Dpic As DocumentoPago_impuesto_cargo, ByVal dpvc As DocumentoPago_voucher_cargo, ByVal dpcc As DocumentoPago_ppto_cargo) As String
 
         Dim tagPago_detalle_cargo As String = ""
         Dim tag_condicion_cargo As String = ""

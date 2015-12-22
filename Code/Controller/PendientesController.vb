@@ -20,8 +20,10 @@
         For Each dr As DataRow In ds.Tables(0).Rows
 
             Dim obj As New ListaObj
-            obj.Codigo = dr("DocXML").ToString
+            obj.Codigo = dr("documento").ToString
             obj.Descripcion = dr("razon").ToString
+            obj.Codigo_Padre = dr("docXML").ToString()
+            obj.Fecha = Convert.ToDateTime(dr("Fecha").ToString())
             arr.Add(obj)
         Next
 

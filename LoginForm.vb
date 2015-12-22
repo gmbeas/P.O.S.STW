@@ -85,11 +85,14 @@ Public Class LoginForm
                 arreglo.Add(obj)
 
                 For Each dr_ As DataRow In dsCajas.Tables(0).Rows
+                    Dim i = _GetDeudores(dr_("Caja"))
                     totalcajas = totalcajas + 1
                     Dim objSesion As New ClsSesion
                     objSesion.Sede = dr_("Sede").ToString
                     objSesion.Caja = dr_("Caja").ToString
                     objSesion.NumeroLineas = _GetNumeroLineas(dr_("Caja"))
+                    objSesion.PuertoTbk = _GetPuertoTBK(dr_("Caja"))
+                    objSesion.Deudores =i
                     objSesion.Bodega = dr_("Bodega").ToString
                     objSesion.Ubicacion = dr_("Ubicacion").ToString
                     objSesion.Vendedor = dr_("CodVendedor").ToString
@@ -103,13 +106,16 @@ Public Class LoginForm
 
                 Dim cajaUsuario As String = ""
                 If totalcajas = 1 Then
-
+                    
                     Dim drcaja As DataRow = dsCajas.Tables(0).Rows(0)
+                     Dim i = _GetDeudores(drcaja("Caja"))
                     cajaUsuario = drcaja("USR_ID").ToString
                     Me.DropCaja.Enabled = False
                     CajaPos = drcaja("CAJA").ToString
                     _CodigoVendedorDefecto = drcaja("CodVendedor").ToString
                     _NumeroLineas = _GetNumeroLineas(drcaja("CAJA").ToString)
+                    _PuertoTbk = _GetPuertoTBK(drcaja("CAJA").ToString)
+                    _Deudores =i
                     _Sede = drcaja("Sede").ToString
                     _Bodega = drcaja("Bodega").ToString
                     _PuntoFacturacion = drcaja("CAJA").ToString
@@ -156,6 +162,8 @@ Public Class LoginForm
                             CajaPos = objsesion.Caja
                             _PuntoFacturacion = objsesion.Caja
                             _NumeroLineas = objsesion.NumeroLineas
+                            _PuertoTbk = objsesion.PuertoTbk
+                            _Deudores = objsesion.Deudores
                             _Pos = objsesion.Caja
                             _VendedorDefecto = objsesion.Vendedor
                             _Sede = objsesion.Sede
@@ -219,7 +227,7 @@ Public Class LoginForm
 
     Private Sub LoginForm1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Dim version = Reflection.Assembly.GetExecutingAssembly().GetName().Version
-        Label2.Text = String.Format("Versión {0} - Fecha compilación 29 Octubre 2014", version)
+        Label2.Text = String.Format("Versión {0} - Fecha compilación 23 Septiembre 2015", version)
 
         
 

@@ -107,6 +107,12 @@ Public Class DocumentoController
             objArticulo.valortotal = Double.Parse(drDetalle("ValorBruto")).ToString("N0")
             objArticulo.unidadmedida = "CU"
 
+          
+
+            objArticulo.CBruto = Double.Parse(drDetalle("PrecioBruto"))
+            objArticulo.CNeto = Double.Parse(drDetalle("PrecioNeto"))
+            objArticulo.CIva =  Double.Parse(drDetalle("PrecioBruto"))  - Double.Parse(drDetalle("PrecioNeto"))
+
             arregloArticulos.Add(objArticulo)
         Next
 

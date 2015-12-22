@@ -34,9 +34,8 @@ Public Class UsuarioController
     Public Function ValidaRolUsuario(ByVal Username As String, ByVal Rol_id As String) As Boolean
         Dim valor As Boolean = False
         Dim ds As New DataSet
-
         If standalone = True Then
-            'Dim objPos As New _ws_pos.POS
+            'Dim objPos As New _ws_pos.POSPOSPOSPOSPOSPOS
             '  ds = objPos.ValidaRolUsuarioWop(Username, Rol_id)
         Else
             Dim objPos As New WS_POS.POS

@@ -16,6 +16,7 @@ Public Class ArticuloController
 
     Public Function GetArticuloCodigo(ByVal rutempresa As Integer, ByVal sku As String, ByVal listaprecio As String, ByVal espromo As String) As ArticuloObj
 
+        'TOTALES
 
         Dim objArticulo As New ArticuloObj
 
@@ -38,8 +39,11 @@ Public Class ArticuloController
             iva = Math.Round(iva, 0)
             objArticulo.nombre = dr("nombre")
             objArticulo.unidadmedida = dr("um").ToString
-            objArticulo.PrecioIva = Math.Round(Double.Parse(dr("precio")) + iva, 0)
+            objArticulo.PrecioIva = dr("Bruto")'Math.Round(Double.Parse(dr("precio")) + iva, 0)
             objArticulo.Oferta = dr(0).ToString
+            objArticulo.CBruto = Double.Parse(dr("Bruto"))
+            objArticulo.CNeto = Double.Parse(dr("Neto"))
+            objArticulo.CIva = Double.Parse(dr("Iva"))
 
         End If
 
@@ -50,6 +54,7 @@ Public Class ArticuloController
 
         Dim objArticulo As New ArticuloStringObj
 
+       
         Try
             Dim ds As New DataSet
             If standalone = True Then
@@ -65,13 +70,18 @@ Public Class ArticuloController
                 objArticulo.sku = dr("sku").ToString.Trim
                 objArticulo.precio = Double.Parse(dr("precio")).ToString("N0")
                 Dim iva As Integer = (Integer.Parse(dr("precio")) * 19) / 100
-                objArticulo.PrecioIva = (Double.Parse(dr("precio")) + iva).ToString("N0")
+                objArticulo.PrecioIva = (Double.Parse(dr("PrecioBruto"))).ToString("N0")
                 objArticulo.nombre = dr("nombre").ToString.Trim
                 objArticulo.unidadmedida = dr("um").ToString.Trim
                 objArticulo.cantidad = cantidad
                 Dim totalneto As Double = cantidad * Int32.Parse(dr("Precio").ToString)
                 Dim totaliva As Double = totalneto * 0.19
-                objArticulo.valortotal = (totalneto + totaliva).ToString("N0")
+                objArticulo.valortotal = (Double.Parse(dr("Bruto"))).ToString("N0")'(totalneto + totaliva).ToString("N0")
+
+                objArticulo.CBruto = Double.Parse(dr("Bruto"))
+                objArticulo.CNeto = Double.Parse(dr("Neto"))
+                objArticulo.CIva = Double.Parse(dr("Iva"))
+
                 objArticulo.Envase = "C"
                 If dr("Flag").ToString = "1" Then
                     objArticulo.Oferta = 1
@@ -79,7 +89,9 @@ Public Class ArticuloController
                     objArticulo.Oferta = 0
                 End If
 
+                
 
+                
             End If
 
             Return objArticulo

@@ -16,7 +16,7 @@ Public Class VentaController
     Dim objtrans As New Trans
 
 
-    
+
 
     Public Function GetCorrelativo()
 
@@ -50,7 +50,7 @@ Public Class VentaController
 
 
 
-
+#Region "GeneraDocumentoImpresionBoleta"
     Public Function GeneraDocumentoImpresionBoleta(ByVal obj As VentaObj)
 
         Dim arrDetalle As ArrayList = obj.ListaArticulos
@@ -194,23 +194,23 @@ Public Class VentaController
         oSW.Close()
 
     End Function
-
+#End Region
 
 
 #Region "RawPrinterHelper"
     Public Class RawPrinterHelper
 
         ' Structure and API declarions:
-        <StructLayout(LayoutKind.Sequential, CharSet:=CharSet.Ansi)> _
+        <StructLayout(LayoutKind.Sequential, CharSet:=CharSet.Ansi)>
         Public Class DOCINFOA
 
-            <MarshalAs(UnmanagedType.LPStr)> _
+            <MarshalAs(UnmanagedType.LPStr)>
             Public pDocName As String
 
-            <MarshalAs(UnmanagedType.LPStr)> _
+            <MarshalAs(UnmanagedType.LPStr)>
             Public pOutputFile As String
 
-            <MarshalAs(UnmanagedType.LPStr)> _
+            <MarshalAs(UnmanagedType.LPStr)>
             Public pDataType As String
         End Class
 
@@ -506,12 +506,12 @@ Public Class VentaController
                 nombre_ = nombre_.Substring(0, 38)
             End If
 
-            Dim precio_ As Double = objeto.precio
+            Dim precio_ As Double = objeto.CNeto
             Dim descuento_ As Double = objeto.Descuento
 
             If descuento = True Then
 
-                precio_ = precio_ - ((objeto.precio * objeto.PorcentajeDescuento) / 100)
+                precio_ = precio_ - ((objeto.CNeto * objeto.PorcentajeDescuento) / 100)
             End If
 
 
@@ -642,10 +642,750 @@ Public Class VentaController
 
     End Function
 
+    Public Function CalculaTotalesMultifactura(lista As ArrayList) As Array
+        Dim nlineas = _NumeroLineas
+
+        Dim arr4 = New String(Helper.MultiFacturaCantidad - 1) {}
+
+        Dim inicio = 0
+        Dim fin = nlineas
+        If fin > lista.Count() Then
+            fin = lista.Count()
+        End If
+
+        For i As Integer = 0 To Helper.MultiFacturaCantidad - 1
+            Dim suma = 0
+            For j As Integer = inicio To fin - 1
+
+                Dim contenido As ArticuloStringObj = lista(j)
+                suma = suma + Convert.ToInt32(contenido.CBruto * contenido.cantidad)
+                arr4(i) = suma.ToString()
+                'Console.WriteLine(contenido)
+            Next
+            'Console.WriteLine("Corte")
+            inicio = inicio + nlineas
+            fin = fin + nlineas
+            If fin > lista.Count() Then
+                fin = lista.Count()
+            End If
+        Next
+
+        Return arr4
+    End Function
+
+#Region "GeneraDocumentoImpresionFacturaMultiple"
+    Public Function GeneraDocumentoImpresionFacturaMultiple(ByVal obj As VentaObj, ByVal descuento As Boolean)
+
+        Dim arrDetalle As ArrayList = obj.ListaArticulos
+        Dim Totales = CalculaTotalesMultifactura(arrDetalle)
+
+        Dim nlineas = _NumeroLineas
 
 
 
+        Dim inicio = 0
+        Dim fin = nlineas
+        If fin > arrDetalle.Count() Then
+            fin = arrDetalle.Count()
+        End If
+
+        For i As Integer = 0 To Helper.MultiFacturaCantidad - 1
+
+            Dim Bruto = Totales(i)
+
+
+
+            Dim strDetalle As String = ""
+            Dim numeroLinea As Integer = 0
+            Dim nombre As String = ""
+            Dim linea_ As String = "                                                                                                                                                                            "
+
+            Dim contadorArticulos As Integer = 0
+            Dim Subtotal = 0
+            For j As Integer = inicio To fin - 1
+                contadorArticulos = contadorArticulos + 1
+                Dim objeto As ArticuloStringObj = arrDetalle(j)
+                Subtotal = Subtotal + (objeto.CNeto + objeto.cantidad)
+                Dim nombre_ As String = objeto.nombre
+
+                If nombre_.Length > 39 Then
+                    nombre_ = nombre_.Substring(0, 38)
+                End If
+
+                If nombre_.Contains("º") Then
+                    nombre_ = nombre_.Replace("º", "")
+                End If
+
+                If nombre_.Contains("°") Then
+                    nombre_ = nombre_.Replace("°", "")
+                End If
+
+                Dim precio_ As Double = objeto.precio
+                Dim descuento_ As Double = objeto.Descuento
+
+                If descuento = True Then
+
+                    precio_ = precio_ - ((objeto.precio * objeto.PorcentajeDescuento) / 100)
+                End If
+
+
+                linea_ = "                                                                                                                                                                                   "
+                nombre = nombre_
+                numeroLinea = numeroLinea + 1
+
+                If nombre.Length > 39 Then
+                    nombre = nombre.Substring(0, 38)
+                End If
+                linea_ = linea_.Insert(7, objeto.sku)
+                linea_ = linea_.Insert(31 - objeto.cantidad.ToString.Length, objeto.cantidad)
+                linea_ = linea_.Insert(35, nombre)
+                linea_ = linea_.Insert(82 - objeto.unidadmedida.ToString.Length, objeto.unidadmedida)
+                linea_ = linea_.Insert(93 - obj.Descuento.ToString.Length, objeto.DescuentoLinea)
+                linea_ = linea_.Insert(112 - objeto.precio.Trim.Length, objeto.precio.Replace(".", ""))
+                linea_ = linea_.Insert(132 - (objeto.precio * objeto.cantidad).ToString.Replace(".", "").ToString.Length, (objeto.precio * objeto.cantidad).ToString.Replace(".", ""))
+                strDetalle = strDetalle + vbNewLine + linea_
+
+            Next
+
+            If contadorArticulos < _NumeroLineas Then
+
+                For x As Integer = 1 To _NumeroLineas - contadorArticulos
+
+                    strDetalle = strDetalle + vbNewLine + "         "
+                Next
+
+            End If
+
+
+
+            Dim fuecorrecto As Boolean = False
+
+            Dim foliox = Helper.MultifacturaArray(i).ToString()
+
+            Dim oSW As New StreamWriter(_RutaDocumentosImpresos + foliox + "_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt")
+
+
+            Dim lineaCorrelativo As String = "                                                                                                                                                          "
+            lineaCorrelativo = lineaCorrelativo.Insert(116, foliox)
+
+
+            Dim aa = _FechaSistema_ImpresionRecupera(Convert.ToDateTime(obj.FechaEmision))
+
+
+            Dim lineaFecha As String = "                                                                                                                "
+            Try
+
+                If esVentaRecuperada = True Then
+                    lineaFecha = lineaFecha.Insert(27, _FechaSistema_ImpresionRecupera(Convert.ToDateTime(obj.FechaEmision)))
+                Else
+                    lineaFecha = lineaFecha.Insert(27, _FechaSistema_Impresion)
+                End If
+            Catch ex As Exception
+                MessageBox.Show(ex.ToString())
+            End Try
+
+
+
+            lineaFecha = lineaFecha.Insert(84, "Contrato")
+            lineaFecha = lineaFecha.Insert(101, "0")
+            lineaFecha = lineaFecha.Insert(113, "VENTAS POS ")
+
+            Dim LineaFechaVencimiento As String = "                                                                       "
+            LineaFechaVencimiento = LineaFechaVencimiento.Insert(29, obj.FechaVencimiento)
+
+            Dim lineaSubTotal As String = "                                                                                                                                           "
+            lineaSubTotal = lineaSubTotal.Insert(132 - obj.subtotal.Length, obj.subtotal)
+            Dim lineaDescuento As String = "                                                                                                                                                             "
+
+            If obj.Descuento <> 0 Then
+                lineaDescuento = lineaDescuento.Insert(100 - obj.PorcentajeDescuento.ToString.Length, obj.PorcentajeDescuento)
+                lineaDescuento = lineaDescuento.Insert(101, "%")
+                lineaDescuento = lineaDescuento.Insert(104, "DESCUENTO")
+                lineaDescuento = lineaDescuento.Insert(132 - obj.Descuento.ToString.Length - 1, "-" + obj.Descuento.ToString)
+
+
+            End If
+
+            Dim lineaFlete As String = "                                                                                                                                                    "
+
+            If obj.Flete <> 0 Then
+                lineaFlete = lineaFlete.Insert(132 - obj.Flete.ToString.Length, obj.Flete)
+            Else
+                lineaFlete = lineaFlete.Insert(132 - 1, "0")
+            End If
+            Dim lineaNeto As String = "                                                                                                                                                      "
+            lineaNeto = lineaNeto.Insert(132 - obj.Neto.ToString.Length, obj.Neto)
+            Dim LineaIva As String = "                                                                                                                                                               "
+            LineaIva = LineaIva.Insert(132 - obj.iva.Length, obj.iva)
+            Dim LineaTotal As String = "                                                                                                                                                           "
+            LineaTotal = LineaTotal.Insert(132 - obj.total.Length, obj.total)
+
+            Dim Linea As String = ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & " "
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & lineaCorrelativo
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & lineaFecha
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & "                    " + obj.RazonSocial
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & "                      " + obj.rutCliente
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & "                    " + _direccionFacturacion.Direccion.Trim + "," + _direccionFacturacion.DescripcionCiudad.Trim + "," + _direccionFacturacion.DescripcionComuna.Trim
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & "                             " + obj.FormaPago
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & LineaFechaVencimiento
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & "                    " + obj.PerfilCliente.Giro
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & " "
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & " "
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & " "
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & strDetalle
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & lineaSubTotal
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & lineaDescuento
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & lineaFlete
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & lineaNeto & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & LineaIva & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & LineaTotal
+
+            Dim printProFactura = New PrinterSettings()
+            printProFactura.PrinterName = "PROFACTURA"
+            'printProFactura.PrinterName = "PROFACTURA_PHURTADO"
+
+            RawPrinterHelper.SendStringToPrinter(printProFactura.PrinterName, Linea.TrimEnd())
+
+            oSW.WriteLine(Linea)
+            oSW.Flush()
+            oSW.Close()
+
+            inicio = inicio + nlineas
+            fin = fin + nlineas
+            If fin > arrDetalle.Count() Then
+                fin = arrDetalle.Count()
+            End If
+
+        Next
+
+    End Function
+#End Region
+
+#Region "GeneraDocumentoImpresionFacturaMultiple_OLD_23092015"
+    Public Function GeneraDocumentoImpresionFacturaMultiple_OLD_23092015(ByVal obj As VentaObj, ByVal descuento As Boolean)
+
+        Dim arrDetalle As ArrayList = obj.ListaArticulos
+        Dim Totales = CalculaTotalesMultifactura(arrDetalle)
+
+        Dim nlineas = _NumeroLineas
+
+
+
+        Dim inicio = 0
+        Dim fin = nlineas
+        If fin > arrDetalle.Count() Then
+            fin = arrDetalle.Count()
+        End If
+
+        For i As Integer = 0 To Helper.MultiFacturaCantidad - 1
+
+            Dim Bruto = Totales(i)
+
+
+
+            Dim strDetalle As String = ""
+            Dim numeroLinea As Integer = 0
+            Dim nombre As String = ""
+            Dim linea_ As String = "                                                                                                                                                                            "
+
+            Dim contadorArticulos As Integer = 0
+            Dim Subtotal = 0
+            For j As Integer = inicio To fin - 1
+                contadorArticulos = contadorArticulos + 1
+                Dim objeto As ArticuloStringObj = arrDetalle(j)
+                Subtotal = Subtotal + (objeto.CNeto + objeto.cantidad)
+                Dim nombre_ As String = objeto.nombre
+
+                If nombre_.Length > 39 Then
+                    nombre_ = nombre_.Substring(0, 38)
+                End If
+
+                If nombre_.Contains("º") Then
+                    nombre_ = nombre_.Replace("º", "")
+                End If
+
+                If nombre_.Contains("°") Then
+                    nombre_ = nombre_.Replace("°", "")
+                End If
+
+                Dim precio_ As Double = objeto.precio
+                Dim descuento_ As Double = objeto.Descuento
+
+                If descuento = True Then
+
+                    precio_ = precio_ - ((objeto.precio * objeto.PorcentajeDescuento) / 100)
+                End If
+
+
+                linea_ = "                                                                                                                                                                                   "
+                nombre = nombre_
+                numeroLinea = numeroLinea + 1
+
+                If nombre.Length > 39 Then
+                    nombre = nombre.Substring(0, 38)
+                End If
+                linea_ = linea_.Insert(7, objeto.sku)
+                linea_ = linea_.Insert(31 - objeto.cantidad.ToString.Length, objeto.cantidad)
+                linea_ = linea_.Insert(35, nombre)
+                linea_ = linea_.Insert(82 - objeto.unidadmedida.ToString.Length, objeto.unidadmedida)
+                linea_ = linea_.Insert(93 - obj.Descuento.ToString.Length, objeto.DescuentoLinea)
+                linea_ = linea_.Insert(112 - objeto.precio.Trim.Length, objeto.precio.Replace(".", ""))
+                linea_ = linea_.Insert(132 - (objeto.precio * objeto.cantidad).ToString.Replace(".", "").ToString.Length, (objeto.precio * objeto.cantidad).ToString.Replace(".", ""))
+                strDetalle = strDetalle + vbNewLine + linea_
+
+            Next
+
+            If contadorArticulos < _NumeroLineas Then
+
+                For x As Integer = 1 To _NumeroLineas - contadorArticulos
+
+                    strDetalle = strDetalle + vbNewLine + "         "
+                Next
+
+            End If
+
+
+
+            Dim fuecorrecto As Boolean = False
+
+            Dim foliox = Helper.MultifacturaArray(i).ToString()
+
+            Dim oSW As New StreamWriter(_RutaDocumentosImpresos + foliox + "_" + DateTime.Now.ToString("yyyyMMdd") + ".txt")
+
+
+            Dim lineaCorrelativo As String = "                                                                                                                                                          "
+            lineaCorrelativo = lineaCorrelativo.Insert(116, foliox)
+
+
+            Dim aa = _FechaSistema_ImpresionRecupera(Convert.ToDateTime(obj.FechaEmision))
+
+
+            Dim lineaFecha As String = "                                                                                                                "
+            Try
+
+                If esVentaRecuperada = True Then
+                    lineaFecha = lineaFecha.Insert(27, _FechaSistema_ImpresionRecupera(Convert.ToDateTime(obj.FechaEmision)))
+                Else
+                    lineaFecha = lineaFecha.Insert(27, _FechaSistema_Impresion)
+                End If
+            Catch ex As Exception
+                MessageBox.Show(ex.ToString())
+            End Try
+
+
+
+
+            lineaFecha = lineaFecha.Insert(84, "Contrato")
+            lineaFecha = lineaFecha.Insert(101, "0")
+            lineaFecha = lineaFecha.Insert(113, "VENTAS POS ")
+
+            Dim LineaFechaVencimiento As String = "                                                                       "
+            LineaFechaVencimiento = LineaFechaVencimiento.Insert(29, obj.FechaVencimiento)
+
+            Dim lineaSubTotal As String = "                                                                                                                                           "
+            lineaSubTotal = lineaSubTotal.Insert(59, "Subtotal: " + String.Format("{0:000,000,000}", Int32.Parse(Subtotal)))
+            'lineaSubTotal = lineaSubTotal.Insert(132 - obj.subtotal.Length, "Subtotal:" + String.Format("{0:000000000}", Int32.Parse(obj.subtotal)))
+            Dim lineaDescuento As String = "                                                                                                                                                             "
+
+
+            Dim descu = 0
+            If obj.Descuento <> 0 Then
+                descu = Math.Round((Subtotal * obj.PorcentajeDescuento) / 100)
+
+                lineaDescuento = lineaDescuento.Insert(59, "Desc:     " + String.Format("{0:000,000,000}", Int32.Parse(descu)))
+            Else
+                lineaDescuento = lineaDescuento.Insert(59, "Desc:     000.000.000")
+            End If
+
+            Dim lineaFlete As String = "                                                                                                                                              "
+
+            Dim flet = 0
+            If obj.Flete <> 0 Then
+                flet = Math.Round((obj.Flete / Helper.MultiFacturaCantidad))
+                lineaFlete = lineaFlete.Insert(59, "Flete:    " + String.Format("{0:000,000,000}", Int32.Parse(flet)))
+            Else
+                lineaFlete = lineaFlete.Insert(59, "Flete:    000.000.000")
+            End If
+
+            Dim lineaNeto As String = "                                                                                                                                  "
+            Dim xNeto = 0
+            xNeto = (Subtotal - descu) + flet
+            lineaNeto = lineaNeto.Insert(59, "Neto:     " + String.Format("{0:000,000,000}", Int32.Parse(xNeto)))
+            Dim LineaIva As String = "                                                                                                                                   "
+            Dim xIva = 0
+            xIva = Math.Round((xNeto * 19) / 100)
+            LineaIva = LineaIva.Insert(59, "Iva:      " + String.Format("{0:000,000,000}", Int32.Parse(xIva)))
+            Dim LineaTotal As String = "                                                                                                                                  "
+            Dim xTotal = 0
+            xTotal = xIva + xNeto
+            LineaTotal = LineaTotal.Insert(59, "Total:    " + String.Format("{0:000,000,000}", Int32.Parse(xTotal)))
+
+            Dim Linea As String = ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & " "
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & lineaCorrelativo
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & lineaFecha
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & "                    " + obj.RazonSocial
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & "                      " + obj.rutCliente
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & "                    " + _direccionFacturacion.Direccion.Trim + "," + _direccionFacturacion.DescripcionCiudad.Trim + "," + _direccionFacturacion.DescripcionComuna.Trim
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & "                             " + obj.FormaPago
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & LineaFechaVencimiento
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & "                    " + obj.PerfilCliente.Giro
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & " "
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & " "
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & " "
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & strDetalle
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & lineaSubTotal
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & lineaDescuento
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & lineaFlete
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & lineaNeto & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & LineaIva & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & LineaTotal
+
+            Dim printProFactura = New PrinterSettings()
+            printProFactura.PrinterName = "PROFACTURA"
+            'printProFactura.PrinterName = "PROFACTURA_PHURTADO"
+
+            RawPrinterHelper.SendStringToPrinter(printProFactura.PrinterName, Linea.TrimEnd())
+
+            oSW.WriteLine(Linea)
+            oSW.Flush()
+            oSW.Close()
+
+            inicio = inicio + nlineas
+            fin = fin + nlineas
+            If fin > arrDetalle.Count() Then
+                fin = arrDetalle.Count()
+            End If
+
+        Next
+
+    End Function
+#End Region
+
+
+#Region "GeneraDocumentoImpresionFactura"
     Public Function GeneraDocumentoImpresionFactura(ByVal obj As VentaObj, ByVal descuento As Boolean)
+
+        Try
+            Dim arrDetalle As ArrayList = obj.ListaArticulos
+            Dim strDetalle As String = ""
+            Dim numeroLinea As Integer = 0
+            Dim nombre As String = ""
+            Dim linea_ As String = "                                                                                                                                                                            "
+
+            Dim contadorArticulos As Integer = 0
+            For Each objeto As ArticuloStringObj In arrDetalle
+                contadorArticulos = contadorArticulos + 1
+
+                Dim nombre_ As String = objeto.nombre
+
+                If nombre_.Length > 39 Then
+                    nombre_ = nombre_.Substring(0, 38)
+                End If
+
+                If nombre_.Contains("º") Then
+                    nombre_ = nombre_.Replace("º", "")
+                End If
+
+                If nombre_.Contains("°") Then
+                    nombre_ = nombre_.Replace("°", "")
+                End If
+
+                Dim precio_ As Double = objeto.precio
+                Dim descuento_ As Double = objeto.Descuento
+
+                If descuento = True Then
+
+                    precio_ = precio_ - ((objeto.precio * objeto.PorcentajeDescuento) / 100)
+                End If
+
+
+                linea_ = "                                                                                                                                                                                   "
+                nombre = nombre_
+                numeroLinea = numeroLinea + 1
+
+                If nombre.Length > 39 Then
+                    nombre = nombre.Substring(0, 38)
+                End If
+                linea_ = linea_.Insert(7, objeto.sku)
+                linea_ = linea_.Insert(31 - objeto.cantidad.ToString.Length, objeto.cantidad)
+                linea_ = linea_.Insert(35, nombre)
+                linea_ = linea_.Insert(82 - objeto.unidadmedida.ToString.Length, objeto.unidadmedida)
+                linea_ = linea_.Insert(93 - obj.Descuento.ToString.Length, objeto.DescuentoLinea)
+                linea_ = linea_.Insert(112 - objeto.CNeto.ToString().Length, objeto.CNeto)
+                linea_ = linea_.Insert(132 - (objeto.CNeto * objeto.cantidad).ToString.Replace(".", "").ToString.Length, (objeto.CNeto * objeto.cantidad).ToString.Replace(".", ""))
+                strDetalle = strDetalle + vbNewLine + linea_
+
+            Next
+
+            'If contadorArticulos < 24 Then
+
+            '    For i As Integer = 1 To 24 - contadorArticulos
+
+            '        strDetalle = strDetalle + vbNewLine + "         "
+            '    Next
+
+            'End If
+
+
+            Dim oSW As New StreamWriter(_RutaDocumentosImpresos + obj.nro_Documento + "_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".txt")
+
+
+            Dim lineaCorrelativo As String = "                                                                                                                                                          "
+            lineaCorrelativo = lineaCorrelativo.Insert(9, obj.Correlativo)
+
+            Dim lineacabecera as String = "                                                                                                                                                          "
+            lineacabecera = lineacabecera.Insert(8, "FDV")
+
+
+            Dim aa = _FechaSistema_ImpresionRecupera(Convert.ToDateTime(obj.FechaEmision))
+
+
+            Dim lineaFecha As String = "                                                                                                                "
+            Try
+
+                If esVentaRecuperada = True Then
+                    lineaFecha = lineaFecha.Insert(27, _FechaSistema_ImpresionRecupera(Convert.ToDateTime(obj.FechaEmision)))
+                Else
+                    lineaFecha = lineaFecha.Insert(27, _FechaSistema_Impresion)
+                End If
+            Catch ex As Exception
+                MessageBox.Show(ex.ToString())
+            End Try
+
+
+
+
+            lineaFecha = lineaFecha.Insert(84, "Contrato")
+            lineaFecha = lineaFecha.Insert(101, "0")
+            lineaFecha = lineaFecha.Insert(113, "VENTAS POS ")
+
+            Dim LineaFechaVencimiento As String = "                                                                       "
+            LineaFechaVencimiento = LineaFechaVencimiento.Insert(29, obj.FechaVencimiento)
+
+            Dim lineaSubTotal As String = "                                                                                                                                           "
+
+
+            Dim type = "                   "
+            type = type.Insert(0, "Subtotal")
+            type = type.Insert(21 - obj.subtotal.Length, obj.subtotal)
+            lineaSubTotal = lineaSubTotal.Insert(141 - 30, type)
+            'lineaSubTotal = lineaSubTotal.Insert(132 - obj.subtotal.Length, obj.subtotal)
+
+
+            Dim lineaDescuento As String = "                                                                                                                                                             "
+
+            Dim type1 = "                   "
+            type1 = type1.Insert(0, "Descuento")
+            If obj.Descuento <> 0 Then
+                'lineaDescuento = lineaDescuento.Insert(100 - obj.PorcentajeDescuento.ToString.Length, obj.PorcentajeDescuento)
+                'lineaDescuento = lineaDescuento.Insert(101, "%")
+                'lineaDescuento = lineaDescuento.Insert(104, "DESCUENTO")
+                type1 = type1.Insert(21 - obj.Descuento.ToString().Length, obj.Descuento.ToString())
+                lineaDescuento = lineaDescuento.Insert(141 - 30, type1)
+
+            Else
+                type1 = type1.Insert(21 - 1, "0")
+                lineaDescuento = lineaDescuento.Insert(141 - 30, type1)
+            End If
+
+
+
+
+            Dim lineaFlete As String = "                                                                                                                                              "
+            Dim type2 = "                   "
+            type2 = type2.Insert(0, "Flete")
+
+            If obj.Flete <> 0 Then
+                type2 = type2.Insert(21 - obj.Flete.ToString().Length, obj.Flete.ToString())
+                lineaFlete = lineaFlete.Insert(141 - 30, type2)
+                'lineaFlete = lineaFlete.Insert(132 - obj.Flete.ToString.Length, obj.Flete.ToString())
+            Else
+                type2 = type2.Insert(21 - 1, "0")
+                lineaFlete = lineaFlete.Insert(141 - 30, type2)
+            End If
+
+
+
+            Dim lineaNeto As String = "                                                                                                                                                                                       "
+            Dim type3 = "                   "
+            type3 = type3.Insert(0, "Neto")
+            type3 = type3.Insert(21 - obj.Neto.ToString().Length, obj.Neto)
+            lineaNeto = lineaNeto.Insert(141 - 30, type3)
+            'lineaNeto = lineaNeto.Insert(132 - obj.Neto.ToString.Length, obj.Neto)
+
+
+            Dim LineaIva As String = "                                                                                                                                                                                         "
+            Dim type4 = "                   "
+            type4 = type4.Insert(0, "Iva")
+            type4 = type4.Insert(21 - obj.iva.Length, obj.iva)
+            LineaIva = LineaIva.Insert(141 - 30, type4)
+            'LineaIva = LineaIva.Insert(132 - obj.iva.Length, obj.iva)
+
+            Dim LineaTotal As String = "                                                                                                                                                                                       "
+            Dim type5 = "                   "
+            type5 = type5.Insert(0, "Total")
+            type5 = type5.Insert(21 - obj.total.Length, obj.total)
+            LineaTotal = LineaTotal.Insert(141 - 30, type5)
+            'LineaTotal = LineaTotal.Insert(132 - obj.total.Length, obj.total)
+
+
+            Dim Linea As String = ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & lineacabecera
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & lineaCorrelativo
+            Linea = Linea & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & lineaFecha
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & "                    " + obj.RazonSocial
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & "                      " + obj.rutCliente
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & "                    " + _direccionFacturacion.Direccion.Trim + "," + _direccionFacturacion.DescripcionCiudad.Trim + "," + _direccionFacturacion.DescripcionComuna.Trim
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & "                             " + obj.FormaPago
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & LineaFechaVencimiento
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & "                    " + obj.PerfilCliente.Giro
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & " "
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & " "
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & " "
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & strDetalle
+
+
+
+            Dim lineax = 64 - (contadorArticulos)
+            For i As Integer = 1 To lineax
+                Linea = Linea & vbNewLine & ""
+            Next
+
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & lineaSubTotal.TrimEnd()
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & lineaDescuento.TrimEnd()
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & lineaFlete.TrimEnd()
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & lineaNeto.TrimEnd() & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & LineaIva.TrimEnd() & ""
+            Linea = Linea & vbNewLine & ""
+            Linea = Linea & LineaTotal.TrimEnd()
+
+            Dim printProFactura = New PrinterSettings()
+            printProFactura.PrinterName = "PROFACTURA"
+            'printProFactura.PrinterName = "PROFACTURA_PHURTADO"
+
+            RawPrinterHelper.SendStringToPrinter(printProFactura.PrinterName, Linea.TrimEnd())
+
+            oSW.WriteLine(Linea)
+            oSW.Flush()
+            oSW.Close()
+        Catch ex As Exception
+            MessageBox.Show(ex.ToString())
+        End Try
+
+
+
+
+    End Function
+#End Region
+
+#Region "GeneraDocumentoImpresionFactura_OLD_23092015"
+    Public Function GeneraDocumentoImpresionFactura_OLD_23092015(ByVal obj As VentaObj, ByVal descuento As Boolean)
 
         Dim arrDetalle As ArrayList = obj.ListaArticulos
         Dim strDetalle As String = ""
@@ -735,7 +1475,7 @@ Public Class VentaController
             MessageBox.Show(ex.ToString())
         End Try
 
-       
+
 
 
         lineaFecha = lineaFecha.Insert(84, "Contrato")
@@ -746,8 +1486,8 @@ Public Class VentaController
         LineaFechaVencimiento = LineaFechaVencimiento.Insert(29, obj.FechaVencimiento)
 
         Dim lineaSubTotal As String = "                                                                                                                                           "
-        lineaSubTotal = lineaSubTotal.Insert(59, "Subtotal: " + String.Format("{0:000,000,000}", Int32.Parse(obj.subtotal)))
-        'lineaSubTotal = lineaSubTotal.Insert(132 - obj.subtotal.Length, "Subtotal:" + String.Format("{0:000000000}", Int32.Parse(obj.subtotal)))
+        'lineaSubTotal = lineaSubTotal.Insert(59, "Subtotal: " + String.Format("{0:000,000,000}", Int32.Parse(obj.subtotal)))
+        lineaSubTotal = lineaSubTotal.Insert(132 - obj.subtotal.Length, "Subtotal:" + String.Format("{0:000000000}", Int32.Parse(obj.subtotal)))
         Dim lineaDescuento As String = "                                                                                                                                                             "
 
         If obj.Descuento <> 0 Then
@@ -842,6 +1582,7 @@ Public Class VentaController
 
 
     End Function
+#End Region
 
 
     Public Function GeneraStringFactura(ByVal obj As VentaObj, ByVal descuento As Boolean) As String

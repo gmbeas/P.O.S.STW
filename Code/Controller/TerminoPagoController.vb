@@ -83,13 +83,23 @@ Public Class TerminoPagoController
             Dim obj As New ListaObj
 
             Dim valores As String() = fragmento.Split(New Char() {"-"c})
-            obj.Codigo = valores.GetValue(0).ToString
-            obj.Descripcion = valores.GetValue(1).ToString
+            If _DeudorCheque = True Then
+                If valores.GetValue(0).ToString = "2" Then
+                    obj.Codigo = valores.GetValue(0).ToString
+                    obj.Descripcion = valores.GetValue(1).ToString
+                    arreglo.Add(obj)
 
-            arreglo.Add(obj)
+                End If
+            Else
+                obj.Codigo = valores.GetValue(0).ToString
+                obj.Descripcion = valores.GetValue(1).ToString
+                arreglo.Add(obj)
+
+            End If
+
         Next
 
-  
+
 
         Return arreglo
     End Function
@@ -117,5 +127,5 @@ Public Class TerminoPagoController
         Return arreglo
     End Function
 
-    
+
 End Class

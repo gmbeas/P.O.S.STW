@@ -69,6 +69,10 @@
             cierre = "CloseLista"
         End If
 
+        If Tipo.Text = "Transbank" Then
+            cierre = "CloseTrans"
+        End If
+
         RaiseEvent Autorizacion(cierre)
         Me.Close()
     End Sub

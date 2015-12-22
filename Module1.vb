@@ -78,6 +78,31 @@ Module Module1
         End If
     End Function
 
+    Public Function _GetPuertoTBK(caja As String) As String
+        Dim aa = New ws_pos.Pos
+        Dim aaa = aa.WPL_LeeParametrosAdminWeb("POS", "POS_PUERTO_TBK", caja, "", "", 0)
+        Dim au = aaa.Tables(0).Rows.Count
+        If (au > 0) Then
+            Dim dr = aaa.Tables(0).Rows(0)
+            Return dr("Valor").ToString()
+        Else
+            Return "COM1"
+        End If
+    End Function
+
+
+     Public Function _GetDeudores(caja As String) As Int32
+        Dim aa = New ws_pos.Pos
+        Dim aaa = aa.WPL_LeeParametrosAdminWeb("POS", "POS_DEUDORES", caja, "", "", 0)
+        Dim au = aaa.Tables(0).Rows.Count
+        If (au > 0) Then
+            Dim dr = aaa.Tables(0).Rows(0)
+             Return Int32.Parse(dr("Valor").ToString())
+        Else
+            Return 0
+        End If
+    End Function
+
     Public Function cadenaSql() As String
         If standalone = False Then
             Return "Server=10.81.13.11;Database=STEWARD_WEB ;User ID=sa;Password=web2010; Trusted_Connection=False;"
@@ -109,6 +134,7 @@ Module Module1
     Public _direccionFacturacion As New DireccionObj
     Public _direccionDespacho As New DireccionObj
     Public _perfilCliente As New PerfilClienteObj
+    Public _DeudorCheque As Boolean = False
 
     Public Function _FechaSistema() As String
 
@@ -1141,6 +1167,26 @@ Module Module1
         End Get
         Set(ByVal value As Int32)
             NumeroLineas_ = value
+        End Set
+    End Property
+
+    Private PuertoTbk_ As String
+    Public Property _PuertoTbk() As String
+        Get
+            Return PuertoTbk_
+        End Get
+        Set(ByVal value As String)
+            PuertoTbk_ = value
+        End Set
+    End Property
+
+    Private Deudores_ As Int32
+    Public Property _Deudores() As Int32
+        Get
+            Return Deudores_
+        End Get
+        Set(ByVal value As Int32)
+            Deudores_ = value
         End Set
     End Property
 

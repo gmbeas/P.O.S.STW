@@ -22,24 +22,24 @@ Partial Class form_Descuento
     'No lo modifique con el editor de código.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(form_Descuento))
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox
-        Me.txtUsuario = New System.Windows.Forms.TextBox
-        Me.txtPassword = New System.Windows.Forms.TextBox
-        Me.Label1 = New System.Windows.Forms.Label
-        Me.Label2 = New System.Windows.Forms.Label
-        Me.btnAceptar = New System.Windows.Forms.Button
-        Me.Label3 = New System.Windows.Forms.Label
-        Me.txtDescuento = New System.Windows.Forms.TextBox
-        Me.lblTitulo = New System.Windows.Forms.Label
-        Me.Label5 = New System.Windows.Forms.Label
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.txtUsuario = New System.Windows.Forms.TextBox()
+        Me.txtPassword = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.btnAceptar = New System.Windows.Forms.Button()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.txtDescuento = New System.Windows.Forms.TextBox()
+        Me.lblTitulo = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
         Me.ErrorProvider1 = New System.Windows.Forms.ErrorProvider(Me.components)
-        Me.txtTipo = New System.Windows.Forms.TextBox
-        Me.txtCodigoArticulo = New System.Windows.Forms.TextBox
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ErrorProvider1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.SuspendLayout()
+        Me.txtTipo = New System.Windows.Forms.TextBox()
+        Me.txtCodigoArticulo = New System.Windows.Forms.TextBox()
+        CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.ErrorProvider1,System.ComponentModel.ISupportInitialize).BeginInit
+        Me.SuspendLayout
         '
         'PictureBox1
         '
@@ -48,7 +48,7 @@ Partial Class form_Descuento
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.Size = New System.Drawing.Size(85, 107)
         Me.PictureBox1.TabIndex = 0
-        Me.PictureBox1.TabStop = False
+        Me.PictureBox1.TabStop = false
         '
         'txtUsuario
         '
@@ -59,7 +59,7 @@ Partial Class form_Descuento
         '
         'txtPassword
         '
-        Me.txtPassword.Location = New System.Drawing.Point(128, 84)
+        Me.txtPassword.Location = New System.Drawing.Point(125, 86)
         Me.txtPassword.Name = "txtPassword"
         Me.txtPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
         Me.txtPassword.Size = New System.Drawing.Size(155, 20)
@@ -67,7 +67,7 @@ Partial Class form_Descuento
         '
         'Label1
         '
-        Me.Label1.AutoSize = True
+        Me.Label1.AutoSize = true
         Me.Label1.Location = New System.Drawing.Point(125, 29)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(46, 13)
@@ -76,8 +76,8 @@ Partial Class form_Descuento
         '
         'Label2
         '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(122, 68)
+        Me.Label2.AutoSize = true
+        Me.Label2.Location = New System.Drawing.Point(125, 70)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(56, 13)
         Me.Label2.TabIndex = 4
@@ -85,16 +85,16 @@ Partial Class form_Descuento
         '
         'btnAceptar
         '
-        Me.btnAceptar.Location = New System.Drawing.Point(112, 182)
+        Me.btnAceptar.Location = New System.Drawing.Point(125, 156)
         Me.btnAceptar.Name = "btnAceptar"
         Me.btnAceptar.Size = New System.Drawing.Size(75, 23)
-        Me.btnAceptar.TabIndex = 5
+        Me.btnAceptar.TabIndex = 4
         Me.btnAceptar.Text = "Ingresar Descuento"
-        Me.btnAceptar.UseVisualStyleBackColor = True
+        Me.btnAceptar.UseVisualStyleBackColor = true
         '
         'Label3
         '
-        Me.Label3.AutoSize = True
+        Me.Label3.AutoSize = true
         Me.Label3.Location = New System.Drawing.Point(125, 109)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(62, 13)
@@ -103,15 +103,15 @@ Partial Class form_Descuento
         '
         'txtDescuento
         '
-        Me.txtDescuento.Location = New System.Drawing.Point(128, 125)
+        Me.txtDescuento.Location = New System.Drawing.Point(125, 125)
         Me.txtDescuento.Name = "txtDescuento"
         Me.txtDescuento.Size = New System.Drawing.Size(59, 20)
-        Me.txtDescuento.TabIndex = 7
+        Me.txtDescuento.TabIndex = 3
         '
         'lblTitulo
         '
-        Me.lblTitulo.AutoSize = True
-        Me.lblTitulo.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblTitulo.AutoSize = true
+        Me.lblTitulo.Font = New System.Drawing.Font("Microsoft Sans Serif", 12!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
         Me.lblTitulo.Location = New System.Drawing.Point(42, 9)
         Me.lblTitulo.Name = "lblTitulo"
         Me.lblTitulo.Size = New System.Drawing.Size(220, 20)
@@ -120,8 +120,8 @@ Partial Class form_Descuento
         '
         'Label5
         '
-        Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(193, 128)
+        Me.Label5.AutoSize = true
+        Me.Label5.Location = New System.Drawing.Point(185, 128)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(15, 13)
         Me.Label5.TabIndex = 9
@@ -133,25 +133,25 @@ Partial Class form_Descuento
         '
         'txtTipo
         '
-        Me.txtTipo.Location = New System.Drawing.Point(250, 156)
+        Me.txtTipo.Location = New System.Drawing.Point(250, 112)
         Me.txtTipo.Name = "txtTipo"
         Me.txtTipo.Size = New System.Drawing.Size(30, 20)
         Me.txtTipo.TabIndex = 10
-        Me.txtTipo.Visible = False
+        Me.txtTipo.Visible = false
         '
         'txtCodigoArticulo
         '
-        Me.txtCodigoArticulo.Location = New System.Drawing.Point(250, 182)
+        Me.txtCodigoArticulo.Location = New System.Drawing.Point(250, 138)
         Me.txtCodigoArticulo.Name = "txtCodigoArticulo"
         Me.txtCodigoArticulo.Size = New System.Drawing.Size(30, 20)
         Me.txtCodigoArticulo.TabIndex = 11
-        Me.txtCodigoArticulo.Visible = False
+        Me.txtCodigoArticulo.Visible = false
         '
         'form_Descuento
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(292, 217)
+        Me.ClientSize = New System.Drawing.Size(292, 188)
         Me.Controls.Add(Me.txtCodigoArticulo)
         Me.Controls.Add(Me.txtTipo)
         Me.Controls.Add(Me.Label5)
@@ -164,18 +164,18 @@ Partial Class form_Descuento
         Me.Controls.Add(Me.txtPassword)
         Me.Controls.Add(Me.txtUsuario)
         Me.Controls.Add(Me.PictureBox1)
-        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.MaximizeBox = False
-        Me.MinimizeBox = False
+        Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
+        Me.MaximizeBox = false
+        Me.MinimizeBox = false
         Me.Name = "form_Descuento"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Descuento Producto"
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ErrorProvider1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.ResumeLayout(False)
-        Me.PerformLayout()
+        CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ErrorProvider1,System.ComponentModel.ISupportInitialize).EndInit
+        Me.ResumeLayout(false)
+        Me.PerformLayout
 
-    End Sub
+End Sub
     Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
     Friend WithEvents txtUsuario As System.Windows.Forms.TextBox
     Friend WithEvents txtPassword As System.Windows.Forms.TextBox
